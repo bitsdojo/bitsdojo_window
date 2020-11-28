@@ -2,7 +2,7 @@
 
 A Flutter package that makes it easy to customize and work with your Flutter desktop app window. 
 
-<img src="https://github.com/bitsdojo/bitsdojo_window_private/blob/master/resources/screenshot.png">
+<img src="https://github.com/bitsdojo/bitsdojo_window/blob/master/resources/screenshot.png">
 
 **Features**:
 
