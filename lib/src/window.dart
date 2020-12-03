@@ -64,17 +64,56 @@ class Window {
     return Size(winRect.width, winRect.height);
   }
 
+  double systemMetric(int metric, {int dpiToUse = 0}) {
+    var windowDpi = dpiToUse != 0 ? dpiToUse : this.dpi;
+    double result = GetSystemMetricsForDpi(metric, windowDpi).toDouble();
+    return result;
+  }
+
+  double get borderSize {
+    return this.systemMetric(SM_CXBORDER);
+  }
+
+  int get dpi {
+    return GetDpiForWindow(handle);
+  }
+
+  double get scaleFactor {
+    double result = this.dpi / 96.0;
+    return result;
+  }
+
+  double get titleBarHeight {
+    double scaleFactor = this.scaleFactor;
+    int dpiToUse = this.dpi;
+    double cyCaption = systemMetric(SM_CYCAPTION, dpiToUse: dpiToUse);
+    cyCaption = (cyCaption / scaleFactor);
+    double cySizeFrame = systemMetric(SM_CYSIZEFRAME, dpiToUse: dpiToUse);
+    cySizeFrame = (cySizeFrame / scaleFactor);
+    double cxPaddedBorder = systemMetric(SM_CXPADDEDBORDER, dpiToUse: dpiToUse);
+    cxPaddedBorder = (cxPaddedBorder / scaleFactor).ceilToDouble();
+    double result = cySizeFrame + cyCaption + cxPaddedBorder;
+    return result;
+  }
+
+  Size get titleBarButtonSize {
+    double height = this.titleBarHeight - this.borderSize;
+    double scaleFactor = this.scaleFactor;
+    double cyCaption = systemMetric(SM_CYCAPTION);
+    cyCaption /= scaleFactor;
+    double width = cyCaption * 2;
+    return Size(width, height);
+  }
+
   Size getSizeOnScreen(Size inSize) {
-    int dpi = GetDpiForWindow(handle);
-    double scaleFactor = dpi / 96.0;
+    double scaleFactor = this.scaleFactor;
     double newWidth = inSize.width * scaleFactor;
     double newHeight = inSize.height * scaleFactor;
     return Size(newWidth, newHeight);
   }
 
   Size getLogicalSize(Size inSize) {
-    int dpi = GetDpiForWindow(handle);
-    double scaleFactor = dpi / 96.0;
+    double scaleFactor = this.scaleFactor;
     double newWidth = inSize.width / scaleFactor;
     double newHeight = inSize.height / scaleFactor;
     return Size(newWidth, newHeight);

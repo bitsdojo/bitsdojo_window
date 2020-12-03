@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 
 import './mouse_state_builder.dart';
-import './window_caption.dart';
 import '../icons/icons.dart';
 import '../app_window.dart';
 
@@ -76,7 +75,7 @@ class WindowButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var buttonSize = getTitleBarButtonSize();
+    var buttonSize = appWindow.titleBarButtonSize;
     return MouseStateBuilder(
       builder: (context, mouseState) {
         WindowButtonContext buttonContext = WindowButtonContext()
@@ -88,7 +87,11 @@ class WindowButton extends StatelessWidget {
             ? this.iconBuilder(buttonContext)
             : Container();
 
-        var padding = this.padding ?? EdgeInsets.all(9.0);
+        double borderSize = appWindow.borderSize;
+        double defaultPadding =
+            (appWindow.titleBarHeight - borderSize) / 3 - (borderSize / 2);
+
+        var padding = this.padding ?? EdgeInsets.all(defaultPadding);
         var iconWithPadding = Padding(padding: padding, child: icon);
         var button = (this.builder != null)
             ? this.builder(buttonContext, icon)

@@ -46,5 +46,8 @@ extension SIZEtoSize on SIZE {
 }
 
 const SM_CYCAPTION = 4;
+const SM_CXBORDER = 5;
 const SM_CXSIZE = 30;
 const SM_CYSIZE = 31;
+const SM_CYSIZEFRAME = 33;
+const SM_CXPADDEDBORDER = 92;

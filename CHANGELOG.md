@@ -1,3 +1,8 @@
+## 0.0.3
+    - Using dpi-aware values for title bar and buttons dimensions
+    - Dynamically calculating default button padding instead of fixed one
+## 0.0.2
+    - Added video tutorial link
 ## 0.0.1
 
 * Initial release
