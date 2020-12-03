@@ -3,13 +3,13 @@
 
 #include <flutter_plugin_registrar.h>
 
-#define FLUTTER_PLUGIN_EXPORT __declspec(dllexport)
+#define FLUTTER_PLUGIN_BITSDOJO_WINDOW_EXPORT __declspec(dllexport)
 
 #if defined(__cplusplus)
 extern "C" {
 #endif
 
-FLUTTER_PLUGIN_EXPORT void BitsdojoWindowPluginRegisterWithRegistrar(
+FLUTTER_PLUGIN_BITSDOJO_WINDOW_EXPORT void BitsdojoWindowPluginRegisterWithRegistrar(
     FlutterDesktopPluginRegistrarRef registrar);
 
 #define BDW_CUSTOM_FRAME    0x1
