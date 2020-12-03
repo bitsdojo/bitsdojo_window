@@ -1,19 +1,6 @@
 import 'package:flutter/widgets.dart';
 import '../plugin_channel.dart';
 import '../app_window.dart';
-import '../win32_plus.dart';
-import 'package:win32/win32.dart';
-
-double getTitleBarHeight() {
-  double result = GetSystemMetrics(SM_CYCAPTION).toDouble();
-  return result;
-}
-
-Size getTitleBarButtonSize() {
-  double width = GetSystemMetrics(SM_CXSIZE).toDouble();
-  double height = GetSystemMetrics(SM_CYSIZE).toDouble();
-  return Size(width, height);
-}
 
 void dragAppWindow() async {
   try {
@@ -57,7 +44,7 @@ class WindowTitleBarBox extends StatelessWidget {
   WindowTitleBarBox({Key key, this.child}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    var titlebarHeight = getTitleBarHeight();
+    var titlebarHeight = appWindow.titleBarHeight;
     return SizedBox(height: titlebarHeight, child: this.child ?? Container());
   }
 }
