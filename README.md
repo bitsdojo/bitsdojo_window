@@ -4,7 +4,7 @@ A Flutter package that makes it easy to customize and work with your Flutter des
 
 Watch the tutorial to get started. Click the image below to watch the video: 
 
-[![IMAGE ALT TEXT](http://img.youtube.com/vi/bee2AHQpGK4/0.jpg)](http://www.youtube.com/watch?v=bee2AHQpGK4 "Click to open")
+[![IMAGE ALT TEXT](https://img.youtube.com/vi/bee2AHQpGK4/0.jpg)](http://www.youtube.com/watch?v=bee2AHQpGK4 "Click to open")
 
 <img src="https://github.com/bitsdojo/bitsdojo_window/blob/master/resources/screenshot.png">
 
