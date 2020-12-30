@@ -81,7 +81,7 @@ namespace
     {        
         if (method_call.method_name().compare("dragAppWindow") == 0)
         {
-            bool callResult = dragAppWindow();
+            bool callResult = bitsdojo_window::dragAppWindow();
             if (callResult) {
                 result->Success();
             } else {

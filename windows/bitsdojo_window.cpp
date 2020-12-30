@@ -5,6 +5,8 @@
 #include "bitsdojo_window.h"
 #include "./include/bitsdojo_window/bitsdojo_window_plugin.h"
 
+namespace bitsdojo_window {
+
 HWND flutter_window = nullptr;
 HWND flutter_child_window = nullptr;
 HHOOK flutterWindowMonitor = nullptr;
@@ -17,8 +19,60 @@ BOOL visible_on_startup = TRUE;
 SIZE min_size = {0, 0};
 SIZE max_size = {0, 0};
 
-int bitsdojo_window_init();
-auto bdw_init = bitsdojo_window_init();
+enum class AppState
+{
+    Unknown = 0,
+    Starting,
+    Ready,
+};
+
+AppState app_state = AppState::Unknown;
+
+// Forward declarations
+int init();
+void monitorFlutterWindows();
+
+auto bdw_init = init();
+
+int init()
+{
+    app_state = AppState::Starting;
+    monitorFlutterWindows();
+    return 1;
+}
+
+int configure(unsigned int flags)
+{
+    has_custom_frame = (flags & BDW_CUSTOM_FRAME);
+    visible_on_startup = !(flags & BDW_HIDE_ON_STARTUP);
+    return 1;
+}
+
+void setMinSize(int width, int height)
+{
+    min_size.cx = width;
+    min_size.cy = height;
+}
+
+void setMaxSize(int width, int height)
+{
+    max_size.cx = width;
+    max_size.cy = height;
+}
+UINT8 getAppState()
+{
+    return (UINT8)app_state;
+}
+
+void setAppState(UINT8 newState)
+{
+    app_state = AppState(newState);
+}
+
+HWND getFlutterWindow()
+{
+    return flutter_window;
+}
 
 LRESULT CALLBACK main_window_proc(HWND window, UINT message, WPARAM wparam, LPARAM lparam, UINT_PTR subclassID, DWORD_PTR refData);
 LRESULT CALLBACK child_window_proc(HWND window, UINT message, WPARAM wparam, LPARAM lparam, UINT_PTR subclassID, DWORD_PTR refData);
@@ -59,59 +113,7 @@ void monitorFlutterWindows()
     flutterWindowMonitor = SetWindowsHookEx(WH_CBT, monitorFlutterWindowsProc, NULL, threadID);
 }
 
-enum class AppState
-{
-    Unknown = 0,
-    Starting,
-    Ready,
-};
-
-AppState app_state = AppState::Unknown;
-
-int bitsdojo_window_init()
-{
-    app_state = AppState::Starting;
-    monitorFlutterWindows();
-    return 1;
-}
-
-int bitsdojo_window_configure(unsigned int flags)
-{
-    has_custom_frame = (flags & BDW_CUSTOM_FRAME);
-    visible_on_startup = !(flags & BDW_HIDE_ON_STARTUP);
-    return 1;
-}
-
-extern "C" __declspec(dllexport) void setMinSize(int width, int height)
-{
-    min_size.cx = width;
-    min_size.cy = height;
-}
-
-extern "C" __declspec(dllexport) void setMaxSize(int width, int height)
-{
-    max_size.cx = width;
-    max_size.cy = height;
-}
-
 LRESULT CALLBACK main_window_proc(HWND window, UINT message, WPARAM wparam, LPARAM lparam, UINT_PTR subclassID, DWORD_PTR refData);
-
-extern "C" __declspec(dllexport)
-    UINT8 getAppState()
-{
-    return (UINT8)app_state;
-}
-
-extern "C" __declspec(dllexport) void setAppState(UINT8 newState)
-{
-    app_state = AppState(newState);
-}
-
-extern "C" __declspec(dllexport)
-    HWND getFlutterWindow()
-{
-    return flutter_window;
-}
 
 void forceChildRefresh()
 {
@@ -424,4 +426,40 @@ bool dragAppWindow()
     ReleaseCapture();
     SendMessage(flutter_window, WM_SYSCOMMAND, SC_MOVE | HTCAPTION, 0);
     return true;
+}
+
+} // bitsdojo_window namespace
+
+int bitsdojo_window_configure(unsigned int flags)
+{
+    return bitsdojo_window::configure(flags);
+}
+
+// Exports
+extern "C" {
+
+BDW_EXPORT void bitsdojo_window_setMinSize(int width, int height)
+{
+    return bitsdojo_window::setMinSize(width, height);
+}
+
+BDW_EXPORT void bitsdojo_window_setMaxSize(int width, int height)
+{
+    return bitsdojo_window::setMaxSize(width, height);
+}
+BDW_EXPORT UINT8 bitsdojo_window_getAppState()
+{
+    return bitsdojo_window::getAppState();
+}
+
+BDW_EXPORT void bitsdojo_window_setAppState(UINT8 newState)
+{
+    return bitsdojo_window::setAppState(newState);
+}
+
+BDW_EXPORT HWND bitsdojo_window_getFlutterWindow()
+{
+    return bitsdojo_window::getFlutterWindow();
+}
+
 }

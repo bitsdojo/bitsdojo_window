@@ -4,8 +4,9 @@ import 'dart:ffi';
 
 final DynamicLibrary _appExecutable = DynamicLibrary.executable();
 
-final _getAppState = _appExecutable
-    .lookupFunction<Uint8 Function(), int Function()>("getAppState");
+final _getAppState =
+    _appExecutable.lookupFunction<Uint8 Function(), int Function()>(
+        "bitsdojo_window_getAppState");
 
 enum AppState { Unknown, Starting, Ready }
 
@@ -27,20 +28,22 @@ AppState getAppState() {
   return AppState.values[_getAppState()];
 }
 
-final _setAppState = _appExecutable
-    .lookupFunction<Void Function(Uint8), void Function(int)>("setAppState");
+final _setAppState =
+    _appExecutable.lookupFunction<Void Function(Uint8), void Function(int)>(
+        "bitsdojo_window_setAppState");
 
 void setAppState(AppState newState) {
   _setAppState(newState.value);
 }
 
-final getFlutterWindow = _appExecutable
-    .lookupFunction<IntPtr Function(), int Function()>("getFlutterWindow");
+final getFlutterWindow =
+    _appExecutable.lookupFunction<IntPtr Function(), int Function()>(
+        "bitsdojo_window_getFlutterWindow");
 
 final setMinSize = _appExecutable.lookupFunction<
     Void Function(Int32 width, Int32 height),
-    void Function(int width, int height)>("setMinSize");
+    void Function(int width, int height)>("bitsdojo_window_setMinSize");
 
 final setMaxSize = _appExecutable.lookupFunction<
     Void Function(Int32 width, Int32 height),
-    void Function(int width, int height)>("setMaxSize");
+    void Function(int width, int height)>("bitsdojo_window_setMaxSize");
