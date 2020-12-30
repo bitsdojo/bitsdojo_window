@@ -1,4 +1,4 @@
-### 0.0.4
+## 0.0.4
     - Better integration with other plugins
 ## 0.0.3
     - Using dpi-aware values for title bar and buttons dimensions
