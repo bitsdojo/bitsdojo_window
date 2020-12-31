@@ -144,6 +144,9 @@ void extendIntoClientArea(HWND hwnd)
 
 LRESULT handle_nchittest(HWND window, WPARAM wparam, LPARAM lparam)
 {
+    bool isMaximized = IsZoomed(flutter_window);
+    if(isMaximized)
+        return HTCLIENT;
     POINT pt = {GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam)};
     ScreenToClient(window, &pt);
     RECT rc;
@@ -199,7 +202,7 @@ LRESULT handle_nccalcsize(HWND window, WPARAM wparam, LPARAM lparam)
     bool isMaximized = IsZoomed(window);
     if (isMaximized)
     {
-        int resizeMargin = getResizeMargin(window);
+        int resizeMargin = getResizeMargin(window)-1;
         params->rgrc[0].left += resizeMargin;
         params->rgrc[0].top += resizeMargin;
         params->rgrc[0].right -= resizeMargin;
