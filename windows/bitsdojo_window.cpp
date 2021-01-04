@@ -133,6 +133,10 @@ int getResizeMargin(HWND window)
     UINT currentDpi = GetDpiForWindow(window);
     int resizeBorder = GetSystemMetricsForDpi(SM_CXSIZEFRAME, currentDpi);
     int borderPadding = GetSystemMetricsForDpi(SM_CXPADDEDBORDER, currentDpi);
+    bool isMaximized = IsZoomed(window);
+    if (isMaximized) {
+        return borderPadding;
+    }
     return resizeBorder + borderPadding;
 }
 
@@ -144,6 +148,9 @@ void extendIntoClientArea(HWND hwnd)
 
 LRESULT handle_nchittest(HWND window, WPARAM wparam, LPARAM lparam)
 {
+    bool isMaximized = IsZoomed(flutter_window);
+    if(isMaximized)
+        return HTCLIENT;
     POINT pt = {GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam)};
     ScreenToClient(window, &pt);
     RECT rc;
