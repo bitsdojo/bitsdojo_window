@@ -1,67 +1,108 @@
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/widgets.dart';
 
-const _closeIcon = """
-<svg 
-    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-    <g clip-path="url(#clip0)" fill-rule="evenodd" clip-rule="evenodd">
-        <path d="M19.1 19.819L.283 1 1.975-.064l18.82 18.819-1.694 1.064z"/>
-        <path d="M.001 18.819L18.82 0l1.693 1.064-18.818 18.82L0 18.818z"/>
-    </g>
-    <defs>
-        <clipPath id="clip0">
-            <path d="M0 0h20v20H0z"/>
-        </clipPath>
-    </defs>
-</svg>
-""";
-
-const _maximizeIcon = """
-<svg fill="none"
-    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M17.5 2.5h-15v15h15v-15zM.5.5v19h19V.5H.5z" fill="#fff"/>
-</svg>
-""";
-
-const _minimizeIcon = """
-<svg
-    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M20 12H0v-2h20v2z"/>
-</svg>
-""";
-
+/// Close
 class CloseIcon extends StatelessWidget {
   final Color color;
-  CloseIcon({
-    Key key,
-    this.color,
-  }) : super(key: key);
+  CloseIcon({Key key, this.color}) : super(key: key);
   @override
-  Widget build(BuildContext context) {
-    return SvgPicture.string(_closeIcon, color: color);
+  Widget build(BuildContext context) => _AlignedPaint(_ClosePainter(color));
+}
+
+class _ClosePainter extends _IconPainter {
+  _ClosePainter(Color color) : super(color);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint p = getPaint(color, true);
+    canvas.drawLine(Offset(0, 0), Offset(size.width, size.height), p);
+    canvas.drawLine(Offset(size.width, 0), Offset(0, size.height), p);
   }
 }
 
+/// Maximize
 class MaximizeIcon extends StatelessWidget {
   final Color color;
-  MaximizeIcon({
-    Key key,
-    this.color,
-  }) : super(key: key);
+  MaximizeIcon({Key key, this.color}) : super(key: key);
   @override
-  Widget build(BuildContext context) {
-    return SvgPicture.string(_maximizeIcon, color: color);
+  Widget build(BuildContext context) => _AlignedPaint(_MaximizePainter(color));
+}
+
+class _MaximizePainter extends _IconPainter {
+  _MaximizePainter(Color color) : super(color);
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint p = getPaint(color);
+    canvas.drawRect(Rect.fromLTRB(0, 0, size.width - 1, size.height - 1), p);
   }
 }
 
-class MinimizeIcon extends StatelessWidget {
+/// Restore
+class RestoreIcon extends StatelessWidget {
   final Color color;
-  MinimizeIcon({
+  RestoreIcon({
     Key key,
     this.color,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return SvgPicture.string(_minimizeIcon, color: color);
+    return Align(
+      alignment: Alignment.center,
+      child: CustomPaint(size: Size(10, 10), painter: _RestorePainter(color)),
+    );
   }
 }
+
+class _RestorePainter extends _IconPainter {
+  _RestorePainter(Color color) : super(color);
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint p = getPaint(color);
+    canvas.drawRect(Rect.fromLTRB(0, 2, size.width - 2, size.height), p);
+    canvas.drawLine(Offset(2, 2), Offset(2, 0), p);
+    canvas.drawLine(Offset(2, 0), Offset(size.width, 0), p);
+    canvas.drawLine(Offset(size.width, 0), Offset(size.width, size.height - 2), p);
+    canvas.drawLine(Offset(size.width, size.height - 2), Offset(size.width - 2, size.height - 2), p);
+  }
+}
+
+/// Minimize
+class MinimizeIcon extends StatelessWidget {
+  final Color color;
+  MinimizeIcon({Key key, this.color}) : super(key: key);
+  @override
+  Widget build(BuildContext context) => _AlignedPaint(_MinimizePainter(color));
+}
+
+class _MinimizePainter extends _IconPainter {
+  _MinimizePainter(Color color) : super(color);
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint p = getPaint(color);
+    canvas.drawLine(Offset(0, size.height / 2), Offset(size.width, size.height / 2), p);
+  }
+}
+
+/// Helpers
+abstract class _IconPainter extends CustomPainter {
+  _IconPainter(this.color);
+  final Color color;
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _AlignedPaint extends StatelessWidget {
+  const _AlignedPaint(this.painter, {Key key}) : super(key: key);
+  final CustomPainter painter;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(alignment: Alignment.center, child: CustomPaint(size: Size(10, 10), painter: painter));
+  }
+}
+
+Paint getPaint(Color color, [bool isAntiAlias = false]) => Paint()
+  ..color = color
+  ..style = PaintingStyle.stroke
+  ..isAntiAlias = isAntiAlias
+  ..strokeWidth = 1;
