@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/widgets.dart';
 
 /// Close
@@ -5,18 +7,14 @@ class CloseIcon extends StatelessWidget {
   final Color color;
   CloseIcon({Key key, this.color}) : super(key: key);
   @override
-  Widget build(BuildContext context) => _AlignedPaint(_ClosePainter(color));
-}
-
-class _ClosePainter extends _IconPainter {
-  _ClosePainter(Color color) : super(color);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    Paint p = getPaint(color, true);
-    canvas.drawLine(Offset(0, 0), Offset(size.width, size.height), p);
-    canvas.drawLine(Offset(size.width, 0), Offset(0, size.height), p);
-  }
+  Widget build(BuildContext context) => Align(
+        alignment: Alignment.topLeft,
+        child: Stack(children: [
+          // Use rotated containers instead of a painter because it renders slightly crisper than a painter for some reason.
+          Transform.rotate(angle: pi * .25, child: Center(child: Container(width: 14, height: 1, color: color))),
+          Transform.rotate(angle: pi * -.25, child: Center(child: Container(width: 14, height: 1, color: color))),
+        ]),
+      );
 }
 
 /// Maximize
