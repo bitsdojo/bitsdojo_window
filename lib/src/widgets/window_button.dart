@@ -43,6 +43,7 @@ class WindowButton extends StatelessWidget {
   final WindowButtonBuilder builder;
   final WindowButtonIconBuilder iconBuilder;
   final WindowButtonColors colors;
+  final bool animate;
   final EdgeInsets padding;
   final VoidCallback onPressed;
 
@@ -52,7 +53,8 @@ class WindowButton extends StatelessWidget {
       this.builder,
       @required this.iconBuilder,
       this.padding,
-      this.onPressed})
+      this.onPressed,
+      this.animate = false})
       : super(key: key);
 
   Color getBackgroundColor(MouseState mouseState) {
@@ -86,18 +88,23 @@ class WindowButton extends StatelessWidget {
         var icon = (this.iconBuilder != null)
             ? this.iconBuilder(buttonContext)
             : Container();
-
         double borderSize = appWindow.borderSize;
         double defaultPadding =
             (appWindow.titleBarHeight - borderSize) / 3 - (borderSize / 2);
-
+        // Used as a tween target if null is returned as a color from getBackgroundColor(), allowing the over state to smoothly transition to transparent.
+        var fadeOutColor =
+            getBackgroundColor(MouseState()..isMouseOver = true).withOpacity(0);
         var padding = this.padding ?? EdgeInsets.all(defaultPadding);
-        var iconWithPadding = Padding(padding: padding, child: icon);
+        var animationMs = mouseState.isMouseOver ? 0 : (animate ? 200 : 0);
+        Widget iconWithPadding = Padding(padding: padding, child: icon);
+        iconWithPadding = AnimatedContainer(
+            curve: Curves.easeOut,
+            duration: Duration(milliseconds: animationMs),
+            color: buttonContext.backgroundColor ?? fadeOutColor,
+            child: iconWithPadding);
         var button = (this.builder != null)
             ? this.builder(buttonContext, icon)
-            : Container(
-                color: buttonContext.backgroundColor, child: iconWithPadding);
-
+            : iconWithPadding;
         return SizedBox(
             width: buttonSize.width, height: buttonSize.height, child: button);
       },
