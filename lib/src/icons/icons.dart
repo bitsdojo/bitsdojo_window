@@ -42,12 +42,7 @@ class RestoreIcon extends StatelessWidget {
     this.color,
   }) : super(key: key);
   @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.center,
-      child: CustomPaint(size: Size(10, 10), painter: _RestorePainter(color)),
-    );
-  }
+  Widget build(BuildContext context) => _AlignedPaint(_RestorePainter(color));
 }
 
 class _RestorePainter extends _IconPainter {
