@@ -91,7 +91,7 @@ class WindowButton extends StatelessWidget {
         double borderSize = appWindow.borderSize;
         double defaultPadding =
             (appWindow.titleBarHeight - borderSize) / 3 - (borderSize / 2);
-        // Used as a tween target if null is returned as a color from getBackgroundColor(), allowing the over state to smoothly transition to transparent.
+        // Used when buttonContext.backgroundColor is null, allowing the AnimatedContainer to fade-out smoothly. 
         var fadeOutColor =
             getBackgroundColor(MouseState()..isMouseOver = true).withOpacity(0);
         var padding = this.padding ?? EdgeInsets.all(defaultPadding);
