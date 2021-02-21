@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import './mouse_state_builder.dart';
 import '../icons/icons.dart';
 import '../app_window.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 typedef WindowButtonIconBuilder = Widget Function(
     WindowButtonContext buttonContext);
@@ -59,6 +60,7 @@ class WindowButton extends StatelessWidget {
 
   Color getBackgroundColor(MouseState mouseState) {
     var colors = this.colors ?? _defaultButtonColors;
+
     if ((mouseState.isMouseDown) && (colors.mouseDown != null))
       return colors.mouseDown;
     if ((mouseState.isMouseOver) && (colors.mouseOver != null))
@@ -67,7 +69,7 @@ class WindowButton extends StatelessWidget {
   }
 
   Color getIconColor(MouseState mouseState) {
-    var colors = this.colors ?? _defaultButtonColors;
+    final colors = this.colors ?? _defaultButtonColors;
     if ((mouseState.isMouseDown) && (colors.iconMouseDown != null))
       return colors.iconMouseDown;
     if ((mouseState.isMouseOver) && (colors.iconMouseOver != null))
@@ -77,7 +79,10 @@ class WindowButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var buttonSize = appWindow.titleBarButtonSize;
+    if (kIsWeb) {
+      return Container();
+    }
+    final buttonSize = appWindow.titleBarButtonSize;
     return MouseStateBuilder(
       builder: (context, mouseState) {
         WindowButtonContext buttonContext = WindowButtonContext()
