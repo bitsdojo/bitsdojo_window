@@ -44,6 +44,7 @@ class WindowButton extends StatelessWidget {
   final WindowButtonBuilder builder;
   final WindowButtonIconBuilder iconBuilder;
   final WindowButtonColors colors;
+  final bool animate;
   final EdgeInsets padding;
   final VoidCallback onPressed;
 
@@ -53,11 +54,13 @@ class WindowButton extends StatelessWidget {
       this.builder,
       @required this.iconBuilder,
       this.padding,
-      this.onPressed})
+      this.onPressed,
+      this.animate = false})
       : super(key: key);
 
   Color getBackgroundColor(MouseState mouseState) {
-    final colors = this.colors ?? _defaultButtonColors;
+    var colors = this.colors ?? _defaultButtonColors;
+
     if ((mouseState.isMouseDown) && (colors.mouseDown != null))
       return colors.mouseDown;
     if ((mouseState.isMouseOver) && (colors.mouseOver != null))
@@ -87,21 +90,27 @@ class WindowButton extends StatelessWidget {
           ..backgroundColor = getBackgroundColor(mouseState)
           ..iconColor = getIconColor(mouseState);
 
-        final icon = (this.iconBuilder != null)
+        var icon = (this.iconBuilder != null)
             ? this.iconBuilder(buttonContext)
             : Container();
-
         double borderSize = appWindow.borderSize;
         double defaultPadding =
             (appWindow.titleBarHeight - borderSize) / 3 - (borderSize / 2);
-
-        final padding = this.padding ?? EdgeInsets.all(defaultPadding);
-        final iconWithPadding = Padding(padding: padding, child: icon);
-        final button = (this.builder != null)
+        // Used when buttonContext.backgroundColor is null, allowing the AnimatedContainer to fade-out smoothly. 
+        var fadeOutColor =
+            getBackgroundColor(MouseState()..isMouseOver = true).withOpacity(0);
+        var padding = this.padding ?? EdgeInsets.all(defaultPadding);
+        var animationMs =
+            mouseState.isMouseOver ? (animate ? 100 : 0) : (animate ? 200 : 0);
+        Widget iconWithPadding = Padding(padding: padding, child: icon);
+        iconWithPadding = AnimatedContainer(
+            curve: Curves.easeOut,
+            duration: Duration(milliseconds: animationMs),
+            color: buttonContext.backgroundColor ?? fadeOutColor,
+            child: iconWithPadding);
+        var button = (this.builder != null)
             ? this.builder(buttonContext, icon)
-            : Container(
-                color: buttonContext.backgroundColor, child: iconWithPadding);
-
+            : iconWithPadding;
         return SizedBox(
             width: buttonSize.width, height: buttonSize.height, child: button);
       },
@@ -114,10 +123,14 @@ class WindowButton extends StatelessWidget {
 
 class MinimizeWindowButton extends WindowButton {
   MinimizeWindowButton(
-      {Key key, WindowButtonColors colors, VoidCallback onPressed})
+      {Key key,
+      WindowButtonColors colors,
+      VoidCallback onPressed,
+      bool animate})
       : super(
             key: key,
             colors: colors,
+            animate: animate ?? false,
             iconBuilder: (buttonContext) =>
                 MinimizeIcon(color: buttonContext.iconColor),
             onPressed: onPressed ?? () => appWindow.minimize());
@@ -125,10 +138,14 @@ class MinimizeWindowButton extends WindowButton {
 
 class MaximizeWindowButton extends WindowButton {
   MaximizeWindowButton(
-      {Key key, WindowButtonColors colors, VoidCallback onPressed})
+      {Key key,
+      WindowButtonColors colors,
+      VoidCallback onPressed,
+      bool animate})
       : super(
             key: key,
             colors: colors,
+            animate: animate ?? false,
             iconBuilder: (buttonContext) =>
                 MaximizeIcon(color: buttonContext.iconColor),
             onPressed: onPressed ?? () => appWindow.maximizeOrRestore());
@@ -142,10 +159,14 @@ const _defaultCloseButtonColors = WindowButtonColors(
 
 class CloseWindowButton extends WindowButton {
   CloseWindowButton(
-      {Key key, WindowButtonColors colors, VoidCallback onPressed})
+      {Key key,
+      WindowButtonColors colors,
+      VoidCallback onPressed,
+      bool animate})
       : super(
             key: key,
             colors: colors ?? _defaultCloseButtonColors,
+            animate: animate ?? false,
             iconBuilder: (buttonContext) =>
                 CloseIcon(color: buttonContext.iconColor),
             onPressed: onPressed ?? () => appWindow.close());
