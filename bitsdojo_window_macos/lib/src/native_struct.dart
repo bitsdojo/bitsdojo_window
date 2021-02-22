@@ -7,7 +7,7 @@ class BDWRect extends Struct {
 }
 
 Pointer<BDWRect> newBDWRect() {
-  final result = allocate<BDWRect>();
+  final result = calloc<BDWRect>();
   result.ref
     ..left = 0
     ..top = 0

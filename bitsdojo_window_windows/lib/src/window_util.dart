@@ -1,5 +1,5 @@
 import 'dart:ffi';
-import './win32_plus.dart';
+import 'package:win32/win32.dart';
 import 'package:ffi/ffi.dart';
 
 const WM_BDW_ACTION = 0x7FFE;
@@ -15,7 +15,7 @@ class SWPParam extends Struct {
 
 void setWindowPos(
     int hWnd, int hWndInsertAfter, int x, int y, int cx, int cy, int uFlags) {
-  final param = allocate<SWPParam>();
+  final param = calloc<SWPParam>();
   param.ref
     ..x = x
     ..y = y
@@ -30,8 +30,8 @@ class SWTParam extends Struct {
 }
 
 void setWindowText(int hWnd, String text) {
-  final param = allocate<SWTParam>();
-  param.ref.text = Utf16.toUtf16(text);
+  final param = calloc<SWTParam>();
+  param.ref.text = text.toNativeUtf16();
   PostMessage(hWnd, WM_BDW_ACTION, BDW_SETWINDOWTEXT, param.address);
 }
 

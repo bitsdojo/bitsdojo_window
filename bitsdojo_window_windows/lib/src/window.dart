@@ -20,15 +20,14 @@ bool isValidHandle(int handle, String operation) {
 
 Rect getScreenRectForWindow(int handle) {
   int monitor = MonitorFromWindow(handle, MONITOR_DEFAULTTONEAREST);
-  final monitorInfo = allocate<MONITORINFO>()
-    ..ref.cbSize = sizeOf<MONITORINFO>();
+  final monitorInfo = calloc<MONITORINFO>()..ref.cbSize = sizeOf<MONITORINFO>();
   final result = GetMonitorInfo(monitor, monitorInfo);
   if (result == TRUE) {
     return Rect.fromLTRB(
-        monitorInfo.ref.rcWorkLeft.toDouble(),
-        monitorInfo.ref.rcWorkTop.toDouble(),
-        monitorInfo.ref.rcWorkRight.toDouble(),
-        monitorInfo.ref.rcWorkBottom.toDouble());
+        monitorInfo.ref.rcWork.left.toDouble(),
+        monitorInfo.ref.rcWork.top.toDouble(),
+        monitorInfo.ref.rcWork.right.toDouble(),
+        monitorInfo.ref.rcWork.bottom.toDouble());
   }
   return Rect.zero;
 }
@@ -45,10 +44,10 @@ class WinWindow extends DesktopWindow {
 
   @override
   Rect get rect {
-    final winRect = allocate<RECT>();
+    final winRect = calloc<RECT>();
     GetWindowRect(handle, winRect);
     Rect result = winRect.ref.toRect;
-    free(winRect);
+    calloc.free(winRect);
     return result;
   }
 
