@@ -29,7 +29,7 @@ Install the package using `pubspec.yaml`
 
 Inside your application folder, go to `windows\runner\main.cpp` and add these two lines at the beginning of the file:
 
-```
+```cpp
 #include <bitsdojo_window_windows/bitsdojo_window_plugin.h>
 auto bdw = bitsdojo_window_configure(BDW_CUSTOM_FRAME | BDW_HIDE_ON_STARTUP);
 ```
@@ -40,7 +40,7 @@ If you don't want to hide the window on startup, you can remove the `BDW_HIDE_ON
 
 Now go to `lib\main.dart` and add this code in the `main` function right after `runApp(MyApp());` :
 
-```
+```dart
 void main() {
   runApp(MyApp());
 
@@ -62,7 +62,7 @@ You can find examples in the `example` folder.
 Here is an example that displays this window:
 
 
-```
+```dart
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 
