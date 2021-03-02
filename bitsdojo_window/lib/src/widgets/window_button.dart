@@ -4,6 +4,7 @@ import './mouse_state_builder.dart';
 import '../icons/icons.dart';
 import '../app_window.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:io' show Platform;
 
 typedef WindowButtonIconBuilder = Widget Function(
     WindowButtonContext buttonContext);
@@ -81,6 +82,11 @@ class WindowButton extends StatelessWidget {
   Widget build(BuildContext context) {
     if (kIsWeb) {
       return Container();
+    } else {
+      // Don't show button on macOS
+      if (Platform.isMacOS) {
+        return Container();
+      }
     }
     final buttonSize = appWindow.titleBarButtonSize;
     return MouseStateBuilder(
@@ -96,7 +102,7 @@ class WindowButton extends StatelessWidget {
         double borderSize = appWindow.borderSize;
         double defaultPadding =
             (appWindow.titleBarHeight - borderSize) / 3 - (borderSize / 2);
-        // Used when buttonContext.backgroundColor is null, allowing the AnimatedContainer to fade-out smoothly. 
+        // Used when buttonContext.backgroundColor is null, allowing the AnimatedContainer to fade-out smoothly.
         var fadeOutColor =
             getBackgroundColor(MouseState()..isMouseOver = true).withOpacity(0);
         var padding = this.padding ?? EdgeInsets.all(defaultPadding);

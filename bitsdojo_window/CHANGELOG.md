@@ -1,3 +1,7 @@
+## 0.0.8
+    - Added macOS readme instructions
+## 0.0.7
+    - macOS support added
 ## 0.0.6
     - Works with latest Flutter version (master channel)
 ## 0.0.5

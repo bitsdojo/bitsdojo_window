@@ -1,13 +1,11 @@
-import 'dart:ui';
-import 'package:bitsdojo_window/src/other_platform.dart';
 import 'package:bitsdojo_window_platform_interface/bitsdojo_window_platform_interface.dart';
 import 'package:bitsdojo_window_platform_interface/method_channel_bitsdojo_window.dart';
 import 'package:bitsdojo_window_windows/bitsdojo_window_windows.dart';
 import 'package:bitsdojo_window_macos/bitsdojo_window_macos.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-
 import 'dart:io' show Platform;
+import './other_platform.dart';
 
 bool _platformInstanceNeedsInit = true;
 

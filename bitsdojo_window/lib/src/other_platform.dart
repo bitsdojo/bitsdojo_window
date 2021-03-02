@@ -56,6 +56,16 @@ class OtherWindow extends DesktopWindow {
     throw UnimplementedError('hide() has not been implemented.');
   }
 
+  @Deprecated("use isVisible instead")
+  bool get visible {
+    return isVisible;
+  }
+
+  bool get isVisible {
+    throw UnimplementedError('isVisible has not been implemented.');
+  }
+
+  @Deprecated("use show()/hide() instead")
   set visible(bool isVisible) {
     throw UnimplementedError('visible setter has not been implemented.');
   }
