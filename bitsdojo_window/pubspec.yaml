@@ -28,4 +28,7 @@ dependencies:
   bitsdojo_window_macos: ^0.0.2
     #path: ../bitsdojo_window_macos
   bitsdojo_window_linux:
-    path: ../bitsdojo_window_linux
+    git:
+      url: git://github.com/cenomla/bitsdojo_window.git
+      ref: fb3d527572aabfdc5e879e9f54a6c0aca07faf60
+      path: bitsdojo_window_linux
