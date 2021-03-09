@@ -1,3 +1,5 @@
+## 0.0.9
+    - Linux support added
 ## 0.0.8
     - Added macOS readme instructions
 ## 0.0.7

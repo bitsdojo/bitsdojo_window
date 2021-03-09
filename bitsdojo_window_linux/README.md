@@ -1,5 +1,5 @@
-# bitsdojo_window_windows
+# bitsdojo_window_linux
 
-The Windows implementation of [`bitsdojo_window`][1].
+The Linux implementation of [`bitsdojo_window`][1].
 
 [1]: https://pub.dev/packages/bitsdojo_window
