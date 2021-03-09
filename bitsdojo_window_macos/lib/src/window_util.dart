@@ -3,18 +3,31 @@ import './native_struct.dart';
 import 'package:flutter/painting.dart';
 import './native_api.dart';
 
-Rect getScreenRectForWindow(int window) {
-  Rect result;
-  final Pointer<BDWRect> rectPointer = newBDWRect();
-  final bdwResult = getScreenRectNative(window, rectPointer);
+class ScreenInfo {
+  Rect workingRect;
+  Rect fullRect;
+}
+
+ScreenInfo getScreenInfoForWindow(int window) {
+  var result = ScreenInfo();
+  final Pointer<BDWScreenInfo> screenInfoPointer = newBDWScreenInfo();
+  final bdwResult = getScreenInfoNative(window, screenInfoPointer);
+  final Pointer<BDWRect> workingRectPointer = screenInfoPointer.ref.workingRect;
+  final Pointer<BDWRect> fullRectPointer = screenInfoPointer.ref.fullRect;
+  BDWRect workingRect = workingRectPointer.ref;
+  BDWRect fullRect = fullRectPointer.ref;
+
   if (bdwResult == true) {
-    result = Rect.fromLTRB(rectPointer.ref.left, rectPointer.ref.top,
-        rectPointer.ref.right, rectPointer.ref.bottom);
+    result.workingRect = Rect.fromLTRB(workingRect.left, workingRect.top,
+        workingRect.right, workingRect.bottom);
+    result.fullRect = Rect.fromLTRB(
+        fullRect.left, fullRect.top, fullRect.right, fullRect.bottom);
   } else {
     assert(false);
-    result = Rect.zero;
+    result.workingRect = Rect.zero;
+    result.fullRect = Rect.zero;
   }
-  //free(rectPointer);
+  screenInfoPointer.free();
   return result;
 }
 

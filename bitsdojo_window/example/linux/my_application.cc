@@ -16,7 +16,6 @@ G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
 
 // Implements GApplication::activate.
 static void my_application_activate(GApplication* application) {
-  gdk_threads_init();
   MyApplication* self = MY_APPLICATION(application);
   GtkWindow* window =
       GTK_WINDOW(gtk_application_window_new(GTK_APPLICATION(application)));
@@ -46,8 +45,8 @@ static void my_application_activate(GApplication* application) {
     gtk_window_set_titlebar(window, GTK_WIDGET(header_bar));
   }
   else {
-	// Use an empty header bar so that gtk doesn't show the title bar but still retains window resize controls
-    GtkHeaderBar *header_bar = GTK_HEADER_BAR(gtk_header_bar_new());
+  	// Use an empty header bar so that gtk doesn't show the title bar but still retains window resize controls
+     GtkHeaderBar *header_bar = GTK_HEADER_BAR(gtk_header_bar_new());   
     gtk_window_set_titlebar(window, GTK_WIDGET(header_bar));
     gtk_window_set_title(window, "example");
   }
@@ -104,5 +103,6 @@ static void my_application_init(MyApplication* self) {}
 MyApplication* my_application_new() {
   return MY_APPLICATION(g_object_new(my_application_get_type(),
                                      "application-id", APPLICATION_ID,
+                                     "flags", G_APPLICATION_NON_UNIQUE,
                                      nullptr));
 }

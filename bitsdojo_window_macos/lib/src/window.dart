@@ -9,9 +9,12 @@ class MacOSWindow extends DesktopWindow {
   Size _minSize;
   Size _maxSize;
   Alignment _alignment;
+  bool _setTitleOnNextShow;
+  String _titleToSet;
 
   MacOSWindow() {
     _alignment = Alignment.center;
+    _setTitleOnNextShow = false;
   }
 
   Size get size {
@@ -22,7 +25,13 @@ class MacOSWindow extends DesktopWindow {
   Rect get rect => getRectForWindow(handle);
 
   set rect(Rect newRect) {
-    setRectForWindow(handle, newRect);
+    var widthToSet =
+        newRect.width < _minSize.width ? _minSize.width : newRect.width;
+    var heightToSet =
+        newRect.height < _minSize.height ? _minSize.height : newRect.height;
+    final rectToSet =
+        Rect.fromLTWH(newRect.left, newRect.top, widthToSet, heightToSet);
+    setRectForWindow(handle, rectToSet);
   }
 
   Offset get position {
@@ -31,18 +40,21 @@ class MacOSWindow extends DesktopWindow {
   }
 
   set position(Offset newPosition) {
-    //TODO: implement
+    setPositionForWindow(handle, newPosition);
   }
 
   Alignment get alignment => _alignment;
   set alignment(Alignment newAlignment) {
     _alignment = newAlignment;
-    final screenRect = getScreenRectForWindow(handle);
-    final windowRect = getRectOnScreen(this.size, _alignment, screenRect);
-    final newTop = screenRect.height - windowRect.top - windowRect.height;
-    final newBottom = newTop + windowRect.height;
-    this.rect =
-        Rect.fromLTRB(windowRect.left, newTop, windowRect.right, newBottom);
+    final screenInfo = getScreenInfoForWindow(handle);
+    final windowRect =
+        getRectOnScreen(this.size, _alignment, screenInfo.workingRect);
+    final menuBarHeight = screenInfo.workingRect.top;
+    // We need to subtract menuBarHeight because .position uses
+    // setFrameTopLeftPoint internally and that needs an offset
+    // relative to the start of the working rectangle (after the menu bar)
+    final positionToSet = windowRect.topLeft.translate(0, -menuBarHeight);
+    this.position = positionToSet;
   }
 
   set minSize(Size newSize) {
@@ -51,7 +63,8 @@ class MacOSWindow extends DesktopWindow {
   }
 
   set maxSize(Size newSize) {
-    //TODO: Implement
+    _maxSize = newSize;
+    setMaxSize(handle, _maxSize.width.toInt(), _maxSize.height.toInt());
   }
 
   set size(Size newSize) {
@@ -79,23 +92,29 @@ class MacOSWindow extends DesktopWindow {
     if (_alignment == null) {
       setSize(handle, sizeToSet.width.toInt(), sizeToSet.height.toInt());
     } else {
-      final screenRect = getScreenRectForWindow(handle);
-      this.rect = getRectOnScreen(sizeToSet, _alignment, screenRect);
+      final screenInfo = getScreenInfoForWindow(handle);
+      this.rect =
+          getRectOnScreen(sizeToSet, _alignment, screenInfo.workingRect);
     }
   }
 
-  double get titleBarHeight {
-    //TODO: implement
-    return 30.0;
+  Size get titleBarButtonSize {
+    throw UnimplementedError(
+        'titleBarButtonSize getter has not been implemented.');
   }
 
-  Size get titleBarButtonSize {
-    //TODO: implement
-    return Size(0, 0);
+  double get titleBarHeight {
+    return getTitleBarHeight(handle);
   }
 
   set title(String newTitle) {
-    //TODO: implement
+    // Save title internally because window might be hidden
+    // so title won't be set. Will set it on next show()
+    if (this.isVisible == false) {
+      _setTitleOnNextShow = true;
+      _titleToSet = newTitle;
+    }
+    setWindowTitle(handle, newTitle);
   }
 
   double get borderSize {
@@ -103,37 +122,56 @@ class MacOSWindow extends DesktopWindow {
     return 0;
   }
 
+  @Deprecated("use isVisible instead")
+  bool get visible {
+    return isVisible;
+  }
+
+  bool get isVisible {
+    return isWindowVisible(handle);
+  }
+
+  @Deprecated("use show()/hide() instead")
   set visible(bool isVisible) {
-    //TODO: implement
+    if (isVisible) {
+      show();
+    } else {
+      hide();
+    }
   }
 
   void show() {
     showWindow(handle);
+    if (_setTitleOnNextShow) {
+      _setTitleOnNextShow = false;
+      setWindowTitle(handle, _titleToSet);
+    }
   }
 
   void hide() {
-    //TODO: implement
+    hideWindow(handle);
   }
 
   void close() {
-    //TODO: implement
+    closeWindow(handle);
   }
 
   void minimize() {
-    //TODO: implement
+    minimizeWindow(handle);
   }
 
   void maximize() {
-    //TODO: implement
+    maximizeWindow(handle);
   }
 
   void restore() {
-    //TODO: implement
+    if (this.isMaximized) {
+      maximizeOrRestore();
+    }
   }
 
   bool get isMaximized {
-    //TODO: implement
-    return false;
+    return isWindowMaximized(handle);
   }
 
   void startDragging() {
@@ -141,6 +179,6 @@ class MacOSWindow extends DesktopWindow {
   }
 
   void maximizeOrRestore() {
-    maximizeWindow(handle);
+    maximizeOrRestoreWindow(handle);
   }
 }

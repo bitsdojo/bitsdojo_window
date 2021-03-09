@@ -12,9 +12,9 @@ class WindowBorder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Don't show border on macOS
+    // Don't show border on macOS or Linux
     if (!kIsWeb) {
-      if (Platform.isMacOS) {
+      if ((Platform.isMacOS) || (Platform.isLinux)) {
         return child;
       }
     }

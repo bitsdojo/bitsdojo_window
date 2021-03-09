@@ -23,11 +23,8 @@ Rect getScreenRectForWindow(int handle) {
   Pointer<Int32> gtkRect = malloc.allocate(sizeOf<Int32>() * 4);
   gdkMonitorGetGeometry(monitor, gtkRect);
 
-  Rect result = Rect.fromLTWH(
-      gtkRect[0].toDouble(),
-      gtkRect[1].toDouble(),
-      gtkRect[2].toDouble(),
-      gtkRect[3].toDouble());
+  Rect result = Rect.fromLTWH(gtkRect[0].toDouble(), gtkRect[1].toDouble(),
+      gtkRect[2].toDouble(), gtkRect[3].toDouble());
 
   malloc.free(gtkRect);
 
@@ -40,8 +37,19 @@ class GtkWindow extends DesktopWindow {
   Size _maxSize;
   Alignment _alignment;
 
-  GtWindow() {
+  GtkWindow() {
     _alignment = Alignment.center;
+  }
+
+  @override
+  bool get visible {
+    return isVisible;
+  }
+
+  @override
+  bool get isVisible {
+    //TODO: implement
+    return true;
   }
 
   @override
@@ -51,11 +59,8 @@ class GtkWindow extends DesktopWindow {
     gtkWindowGetPosition(handle, gtkRect.elementAt(0), gtkRect.elementAt(1));
     gtkWindowGetSize(handle, gtkRect.elementAt(2), gtkRect.elementAt(3));
 
-    Rect result = Rect.fromLTWH(
-        gtkRect[0].toDouble(),
-        gtkRect[1].toDouble(),
-        gtkRect[2].toDouble(),
-        gtkRect[3].toDouble());
+    Rect result = Rect.fromLTWH(gtkRect[0].toDouble(), gtkRect[1].toDouble(),
+        gtkRect[2].toDouble(), gtkRect[3].toDouble());
 
     malloc.free(gtkRect);
 
@@ -169,7 +174,8 @@ class GtkWindow extends DesktopWindow {
 
     Size sizeToSet = Size(width, height);
     if (_alignment == null) {
-      gtkWindowResize(handle, sizeToSet.width.toInt(), sizeToSet.height.toInt());
+      gtkWindowResize(
+          handle, sizeToSet.width.toInt(), sizeToSet.height.toInt());
     } else {
       final sizeOnScreen = getSizeOnScreen((sizeToSet));
       final screenRect = getScreenRectForWindow(handle);

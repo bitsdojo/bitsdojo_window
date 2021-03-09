@@ -2,23 +2,32 @@
 #import "bitsdojo_window_api.h"
 
 BDWPrivateAPI privateAPI = {
-    isWindowReady,
+    windowCanBeShown,
     setAppWindow
 };
 
-
 BDWPublicAPI publicAPI = {
     getAppWindow,
-    setIsWindowReady,
+    setWindowCanBeShown,
+    setInsideDoWhenWindowReady,
     showWindow,
+    hideWindow,
     moveWindow,
     setSize,
     setMinSize,
-    getScreenRectForWindow,
+    setMaxSize,
+    getScreenInfoForWindow,
+    setPositionForWindow,
     setRectForWindow,
     getRectForWindow,
+    isWindowVisible,
     isWindowMaximized,
-    maximizeWindow
+    maximizeOrRestoreWindow,
+    maximizeWindow,
+    minimizeWindow,
+    closeWindow,
+    setWindowTitle,
+    getTitleBarHeight
 };
 
 BDWAPI bdwAPI = {
@@ -26,6 +35,6 @@ BDWAPI bdwAPI = {
     &privateAPI,
 };
 
-OBJC_EXPORT BDWAPI* bitsdojo_window_api(){
+BDW_EXPORT BDWAPI* bitsdojo_window_api(){
     return &bdwAPI;
 }

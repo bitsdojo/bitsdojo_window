@@ -21,6 +21,10 @@ abstract class DesktopWindow {
 
   set title(String newTitle);
 
+  @Deprecated("use isVisible instead")
+  bool get visible;
+  bool get isVisible;
+  @Deprecated("use show()/hide() instead")
   set visible(bool isVisible);
   void show();
   void hide();

@@ -1,6 +1,6 @@
 name: bitsdojo_window
-description: A package to help with creating custom windows (custom border, titlebar and minimize/maximize/close buttons) and common window operations (show/hide/position on screen)
-version: 0.0.6
+description: A package to help with creating custom windows with Flutter desktop (custom border, titlebar and minimize/maximize/close buttons) and common desktop window operations (show/hide/position on screen) for Windows and macOS
+version: 0.0.8
 homepage: https://www.bitsdojo.com
 repository: https://github.com/bitsdojo/bitsdojo_window
 
@@ -21,14 +21,11 @@ flutter:
 dependencies:
   flutter:
     sdk: flutter
-  bitsdojo_window_platform_interface: ^0.0.1
-    #path: ../bitsdojo_window_platform_interface
-  bitsdojo_window_windows: ^0.0.2
-    #path: ../bitsdojo_window_windows
-  bitsdojo_window_macos: ^0.0.2
-    #path: ../bitsdojo_window_macos
+  bitsdojo_window_platform_interface: #^0.0.2
+    path: ../bitsdojo_window_platform_interface
+  bitsdojo_window_windows: #^0.0.3
+    path: ../bitsdojo_window_windows
+  bitsdojo_window_macos: #^0.0.3
+    path: ../bitsdojo_window_macos
   bitsdojo_window_linux:
-    git:
-      url: git://github.com/cenomla/bitsdojo_window.git
-      ref: fb3d527572aabfdc5e879e9f54a6c0aca07faf60
-      path: bitsdojo_window_linux
+    path: ../bitsdojo_window_linux
