@@ -1,6 +1,6 @@
 # bitsdojo_window
 
-A Flutter package that makes it easy to customize and work with your Flutter desktop app window **on both Windows and macOS** . 
+A [Flutter package](https://pub.dev/packages/bitsdojo_window) that makes it easy to customize and work with your Flutter desktop app window **on both Windows and macOS** . 
 
 Watch the tutorial to get started. Click the image below to watch the video: 
 
