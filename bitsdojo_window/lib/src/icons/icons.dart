@@ -6,8 +6,8 @@ import 'package:flutter/widgets.dart';
 
 /// Close
 class CloseIcon extends StatelessWidget {
-  final Color color;
-  CloseIcon({Key key, this.color}) : super(key: key);
+  final Color? color;
+  CloseIcon({Key? key, this.color}) : super(key: key);
   @override
   Widget build(BuildContext context) => Align(
         alignment: Alignment.topLeft,
@@ -27,10 +27,10 @@ class CloseIcon extends StatelessWidget {
 
 /// Maximize
 class MaximizeIcon extends StatelessWidget {
-  final Color color;
-  MaximizeIcon({Key key, this.color}) : super(key: key);
+  final Color? color;
+  MaximizeIcon({Key? key, this.color}) : super(key: key);
   @override
-  Widget build(BuildContext context) => _AlignedPaint(_MaximizePainter(color));
+  Widget build(BuildContext context) => _AlignedPaint(_MaximizePainter(color!));
 }
 
 class _MaximizePainter extends _IconPainter {
@@ -44,13 +44,13 @@ class _MaximizePainter extends _IconPainter {
 
 /// Restore
 class RestoreIcon extends StatelessWidget {
-  final Color color;
+  final Color? color;
   RestoreIcon({
-    Key key,
+    Key? key,
     this.color,
   }) : super(key: key);
   @override
-  Widget build(BuildContext context) => _AlignedPaint(_RestorePainter(color));
+  Widget build(BuildContext context) => _AlignedPaint(_RestorePainter(color!));
 }
 
 class _RestorePainter extends _IconPainter {
@@ -70,10 +70,10 @@ class _RestorePainter extends _IconPainter {
 
 /// Minimize
 class MinimizeIcon extends StatelessWidget {
-  final Color color;
-  MinimizeIcon({Key key, this.color}) : super(key: key);
+  final Color? color;
+  MinimizeIcon({Key? key, this.color}) : super(key: key);
   @override
-  Widget build(BuildContext context) => _AlignedPaint(_MinimizePainter(color));
+  Widget build(BuildContext context) => _AlignedPaint(_MinimizePainter(color!));
 }
 
 class _MinimizePainter extends _IconPainter {
@@ -96,7 +96,7 @@ abstract class _IconPainter extends CustomPainter {
 }
 
 class _AlignedPaint extends StatelessWidget {
-  const _AlignedPaint(this.painter, {Key key}) : super(key: key);
+  const _AlignedPaint(this.painter, {Key? key}) : super(key: key);
   final CustomPainter painter;
 
   @override

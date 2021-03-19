@@ -9,7 +9,7 @@ import './gtk.dart';
 import 'package:bitsdojo_window_platform_interface/bitsdojo_window_platform_interface.dart';
 import './window_util.dart';
 
-bool isValidHandle(int handle, String operation) {
+bool isValidHandle(int? handle, String operation) {
   if (handle == null) {
     print("Could not $operation - handle is null");
     return false;
