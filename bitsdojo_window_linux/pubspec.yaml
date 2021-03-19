@@ -1,17 +1,17 @@
 name: bitsdojo_window_linux
 description: Linux implementation of the bitsdojo_window plugin.
-version: 0.0.1
+version: 0.1.0
 homepage: https://www.bitsdojo.com
 repository: https://github.com/bitsdojo/bitsdojo_window
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
   flutter: ">=1.20.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  bitsdojo_window_platform_interface: ^0.0.2
+  bitsdojo_window_platform_interface: ^0.1.0
     #path: ../bitsdojo_window_platform_interface
   ffi: ^1.0.0
 

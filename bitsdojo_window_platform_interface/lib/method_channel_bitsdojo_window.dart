@@ -11,7 +11,7 @@ class MethodChannelBitsdojoWindow extends BitsdojoWindowPlatform {
     try {
       await _channel.invokeMethod('dragAppWindow');
     } catch (e) {
-      print("Could not start draggging -> ${e.message}");
+      print("Could not start draggging -> $e");
     }
   }
 }

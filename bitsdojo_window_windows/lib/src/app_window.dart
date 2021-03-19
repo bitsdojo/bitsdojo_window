@@ -13,9 +13,9 @@ class BitsDojoNotInitializedException implements Exception {
 
 class WinAppWindow extends WinWindow {
   WinAppWindow._() {
-    super.handle = getFlutterWindow();
-    AppState state = getAppState();
-    if (state == AppState.Unknown) {
+    super.handle = getAppWindow();
+    final isLoaded = isBitsdojoWindowLoaded();
+    if (!isLoaded) {
       print(notInitializedMessage);
       throw BitsDojoNotInitializedException;
     }

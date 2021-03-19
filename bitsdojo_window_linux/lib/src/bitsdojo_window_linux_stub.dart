@@ -11,6 +11,6 @@ class BitsdojoWindowLinux extends BitsdojoWindowPlatform {
 
   @override
   DesktopWindow get appWindow {
-    return null;
+    return AppWindowNotImplemented();
   }
 }

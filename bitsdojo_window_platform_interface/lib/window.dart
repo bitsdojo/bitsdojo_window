@@ -3,6 +3,8 @@ import 'package:flutter/painting.dart';
 
 abstract class DesktopWindow {
   DesktopWindow();
+  int? get handle;
+  double get scaleFactor;
 
   Rect get rect;
   set rect(Rect newRect);
@@ -13,11 +15,11 @@ abstract class DesktopWindow {
   Size get size;
   set size(Size newSize);
 
-  set minSize(Size newSize);
-  set maxSize(Size newSize);
+  set minSize(Size? newSize);
+  set maxSize(Size? newSize);
 
-  Alignment get alignment;
-  set alignment(Alignment newAlignment);
+  Alignment? get alignment;
+  set alignment(Alignment? newAlignment);
 
   set title(String newTitle);
 

@@ -164,32 +164,33 @@ final DGetTitleBarHeight getTitleBarHeight =
     _publicAPI.ref.getTitleBarHeight.asFunction();
 
 class BDWPublicAPI extends Struct {
-  Pointer<NativeFunction<TGetAppWindow>> getAppWindow;
-  Pointer<NativeFunction<TSetWindowCanBeShown>> setWindowCanBeShown;
-  Pointer<NativeFunction<TSetInsideDoWhenWindowReady>>
+  external Pointer<NativeFunction<TGetAppWindow>> getAppWindow;
+  external Pointer<NativeFunction<TSetWindowCanBeShown>> setWindowCanBeShown;
+  external Pointer<NativeFunction<TSetInsideDoWhenWindowReady>>
       setInsideDoWhenWindowReady;
-  Pointer<NativeFunction<TShowWindow>> showWindow;
-  Pointer<NativeFunction<THideWindow>> hideWindow;
-  Pointer<NativeFunction<TMoveWindow>> moveWindow;
-  Pointer<NativeFunction<TSetSize>> setSize;
-  Pointer<NativeFunction<TSetMinSize>> setMinSize;
-  Pointer<NativeFunction<TSetMaxSize>> setMaxSize;
-  Pointer<NativeFunction<TGetScreenInfoForWindow>> getScreenInfoForWindow;
-  Pointer<NativeFunction<TSetPositionForWindow>> setPositionForWindow;
-  Pointer<NativeFunction<TSetRectForWindow>> setRectForWindow;
-  Pointer<NativeFunction<TGetRectForWindow>> getRectForWindow;
-  Pointer<NativeFunction<TIsWindowMaximized>> isWindowVisible;
-  Pointer<NativeFunction<TIsWindowMaximized>> isWindowMaximized;
-  Pointer<NativeFunction<TMaximizeWindow>> maximizeOrRestoreWindow;
-  Pointer<NativeFunction<TMaximizeWindow>> maximizeWindow;
-  Pointer<NativeFunction<TMaximizeWindow>> minimizeWindow;
-  Pointer<NativeFunction<TCloseWindow>> closeWindow;
-  Pointer<NativeFunction<TSetWindowTitle>> setWindowTitle;
-  Pointer<NativeFunction<TGetTitleBarHeight>> getTitleBarHeight;
+  external Pointer<NativeFunction<TShowWindow>> showWindow;
+  external Pointer<NativeFunction<THideWindow>> hideWindow;
+  external Pointer<NativeFunction<TMoveWindow>> moveWindow;
+  external Pointer<NativeFunction<TSetSize>> setSize;
+  external Pointer<NativeFunction<TSetMinSize>> setMinSize;
+  external Pointer<NativeFunction<TSetMaxSize>> setMaxSize;
+  external Pointer<NativeFunction<TGetScreenInfoForWindow>>
+      getScreenInfoForWindow;
+  external Pointer<NativeFunction<TSetPositionForWindow>> setPositionForWindow;
+  external Pointer<NativeFunction<TSetRectForWindow>> setRectForWindow;
+  external Pointer<NativeFunction<TGetRectForWindow>> getRectForWindow;
+  external Pointer<NativeFunction<TIsWindowMaximized>> isWindowVisible;
+  external Pointer<NativeFunction<TIsWindowMaximized>> isWindowMaximized;
+  external Pointer<NativeFunction<TMaximizeWindow>> maximizeOrRestoreWindow;
+  external Pointer<NativeFunction<TMaximizeWindow>> maximizeWindow;
+  external Pointer<NativeFunction<TMaximizeWindow>> minimizeWindow;
+  external Pointer<NativeFunction<TCloseWindow>> closeWindow;
+  external Pointer<NativeFunction<TSetWindowTitle>> setWindowTitle;
+  external Pointer<NativeFunction<TGetTitleBarHeight>> getTitleBarHeight;
 }
 
 class BDWAPI extends Struct {
-  Pointer<BDWPublicAPI> publicAPI;
+  external Pointer<BDWPublicAPI> publicAPI;
 }
 
 typedef Pointer<BDWAPI> TBitsdojoWindowAPI();

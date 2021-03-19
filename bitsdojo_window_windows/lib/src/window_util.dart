@@ -10,7 +10,7 @@ const BDW_FORCECHILDREFRESH = 3;
 
 class SWPParam extends Struct {
   @Int32()
-  int x, y, cx, cy, uFlags;
+  external int x, y, cx, cy, uFlags;
 }
 
 void setWindowPos(
@@ -26,7 +26,7 @@ void setWindowPos(
 }
 
 class SWTParam extends Struct {
-  Pointer<Utf16> text;
+  external Pointer<Utf16> text;
 }
 
 void setWindowText(int hWnd, String text) {

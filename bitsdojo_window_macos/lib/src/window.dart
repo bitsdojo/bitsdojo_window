@@ -4,13 +4,21 @@ import 'package:flutter/painting.dart';
 import './window_util.dart';
 import './native_api.dart';
 
+bool isValidHandle(int? handle, String operation) {
+  if (handle == null) {
+    print("Could not $operation - handle is null");
+    return false;
+  }
+  return true;
+}
+
 class MacOSWindow extends DesktopWindow {
-  int handle;
-  Size _minSize;
-  Size _maxSize;
-  Alignment _alignment;
-  bool _setTitleOnNextShow;
-  String _titleToSet;
+  int? handle;
+  Size? _minSize;
+  Size? _maxSize;
+  Alignment? _alignment;
+  bool _setTitleOnNextShow = false;
+  String? _titleToSet;
 
   MacOSWindow() {
     _alignment = Alignment.center;
@@ -22,16 +30,28 @@ class MacOSWindow extends DesktopWindow {
     return Size(winRect.right - winRect.left, winRect.bottom - winRect.top);
   }
 
-  Rect get rect => getRectForWindow(handle);
+  Rect get rect {
+    if (!isValidHandle(handle, "get rectangle")) return Rect.zero;
+    return getRectForWindow(handle!);
+  }
+
+  double get scaleFactor {
+    //TODO: implement
+    return 1;
+  }
 
   set rect(Rect newRect) {
-    var widthToSet =
-        newRect.width < _minSize.width ? _minSize.width : newRect.width;
+    if (!isValidHandle(handle, "set rectangle")) return;
+    var widthToSet = ((_minSize != null) && (newRect.width < _minSize!.width))
+        ? _minSize!.width
+        : newRect.width;
     var heightToSet =
-        newRect.height < _minSize.height ? _minSize.height : newRect.height;
+        ((_minSize != null) && (newRect.height < _minSize!.height))
+            ? _minSize!.height
+            : newRect.height;
     final rectToSet =
         Rect.fromLTWH(newRect.left, newRect.top, widthToSet, heightToSet);
-    setRectForWindow(handle, rectToSet);
+    setRectForWindow(handle!, rectToSet);
   }
 
   Offset get position {
@@ -40,81 +60,107 @@ class MacOSWindow extends DesktopWindow {
   }
 
   set position(Offset newPosition) {
-    setPositionForWindow(handle, newPosition);
+    if (!isValidHandle(handle, "set position")) return;
+    setPositionForWindow(handle!, newPosition);
   }
 
-  Alignment get alignment => _alignment;
-  set alignment(Alignment newAlignment) {
+  Alignment? get alignment => _alignment;
+  set alignment(Alignment? newAlignment) {
     _alignment = newAlignment;
-    final screenInfo = getScreenInfoForWindow(handle);
-    final windowRect =
-        getRectOnScreen(this.size, _alignment, screenInfo.workingRect);
-    final menuBarHeight = screenInfo.workingRect.top;
-    // We need to subtract menuBarHeight because .position uses
-    // setFrameTopLeftPoint internally and that needs an offset
-    // relative to the start of the working rectangle (after the menu bar)
-    final positionToSet = windowRect.topLeft.translate(0, -menuBarHeight);
-    this.position = positionToSet;
+    if (_alignment != null) {
+      if (!isValidHandle(handle, "set alignment")) return;
+      final screenInfo = getScreenInfoForWindow(handle!);
+      if (screenInfo.workingRect == null) {
+        print("Can't set alignment - don't have a workingRect");
+        return;
+      }
+      final windowRect =
+          getRectOnScreen(this.size, _alignment!, screenInfo.workingRect!);
+      final menuBarHeight = screenInfo.workingRect!.top;
+      // We need to subtract menuBarHeight because .position uses
+      // setFrameTopLeftPoint internally and that needs an offset
+      // relative to the start of the working rectangle (after the menu bar)
+      final positionToSet = windowRect.topLeft.translate(0, -menuBarHeight);
+      this.position = positionToSet;
+    }
   }
 
-  set minSize(Size newSize) {
+  set minSize(Size? newSize) {
+    if (!isValidHandle(handle, "set minSize")) return;
     _minSize = newSize;
-    setMinSize(handle, _minSize.width.toInt(), _minSize.height.toInt());
+    if (newSize == null) {
+      //TODO - add handling for setting minSize to null
+      return;
+    }
+    setMinSize(handle!, _minSize!.width.toInt(), _minSize!.height.toInt());
   }
 
-  set maxSize(Size newSize) {
+  set maxSize(Size? newSize) {
+    if (!isValidHandle(handle, "set maxSize")) return;
     _maxSize = newSize;
-    setMaxSize(handle, _maxSize.width.toInt(), _maxSize.height.toInt());
+    if (newSize == null) {
+      //TODO - add handling for setting maxSize to null
+      return;
+    }
+    setMaxSize(handle!, _maxSize!.width.toInt(), _maxSize!.height.toInt());
   }
 
   set size(Size newSize) {
+    if (!isValidHandle(handle, "set size")) return;
     var width = newSize.width;
 
-    if ((_minSize != null) && (newSize.width < _minSize.width)) {
-      width = _minSize.width;
+    if (_minSize != null) {
+      if (newSize.width < _minSize!.width) width = _minSize!.width;
     }
 
-    if ((_maxSize != null) && (newSize.width > _maxSize.width)) {
-      width = _maxSize.width;
+    if (_maxSize != null) {
+      if (newSize.width > _maxSize!.width) width = _maxSize!.width;
     }
 
     var height = newSize.height;
 
-    if ((_minSize != null) && (newSize.height < _minSize.height)) {
-      height = _minSize.height;
+    if (_minSize != null) {
+      if (newSize.height < _minSize!.height) height = _minSize!.height;
     }
 
-    if ((_maxSize != null) && (newSize.height > _maxSize.height)) {
-      height = _maxSize.height;
+    if (_maxSize != null) {
+      if (newSize.height > _maxSize!.height) height = _maxSize!.height;
     }
 
     Size sizeToSet = Size(width, height);
     if (_alignment == null) {
-      setSize(handle, sizeToSet.width.toInt(), sizeToSet.height.toInt());
+      setSize(handle!, sizeToSet.width.toInt(), sizeToSet.height.toInt());
     } else {
-      final screenInfo = getScreenInfoForWindow(handle);
+      final screenInfo = getScreenInfoForWindow(handle!);
+      if (screenInfo.workingRect == null) {
+        print("Can't set size - don't have a workingRect");
+        return;
+      }
       this.rect =
-          getRectOnScreen(sizeToSet, _alignment, screenInfo.workingRect);
+          getRectOnScreen(sizeToSet, _alignment!, screenInfo.workingRect!);
     }
   }
 
   Size get titleBarButtonSize {
+    if (!isValidHandle(handle, "get titleBarButtonSize")) return Size.zero;
     throw UnimplementedError(
         'titleBarButtonSize getter has not been implemented.');
   }
 
   double get titleBarHeight {
-    return getTitleBarHeight(handle);
+    if (!isValidHandle(handle, "get titleBarHeight")) return 0;
+    return getTitleBarHeight(handle!);
   }
 
   set title(String newTitle) {
+    if (!isValidHandle(handle, "set title")) return;
     // Save title internally because window might be hidden
     // so title won't be set. Will set it on next show()
     if (this.isVisible == false) {
       _setTitleOnNextShow = true;
       _titleToSet = newTitle;
     }
-    setWindowTitle(handle, newTitle);
+    setWindowTitle(handle!, newTitle);
   }
 
   double get borderSize {
@@ -128,7 +174,8 @@ class MacOSWindow extends DesktopWindow {
   }
 
   bool get isVisible {
-    return isWindowVisible(handle);
+    if (!isValidHandle(handle, "get isVisible")) return false;
+    return isWindowVisible(handle!);
   }
 
   @Deprecated("use show()/hide() instead")
@@ -141,27 +188,34 @@ class MacOSWindow extends DesktopWindow {
   }
 
   void show() {
-    showWindow(handle);
+    if (!isValidHandle(handle, "show")) return;
+    showWindow(handle!);
     if (_setTitleOnNextShow) {
       _setTitleOnNextShow = false;
-      setWindowTitle(handle, _titleToSet);
+      if (_titleToSet != null) {
+        setWindowTitle(handle!, _titleToSet!);
+      }
     }
   }
 
   void hide() {
-    hideWindow(handle);
+    if (!isValidHandle(handle, "hide")) return;
+    hideWindow(handle!);
   }
 
   void close() {
-    closeWindow(handle);
+    if (!isValidHandle(handle, "close")) return;
+    closeWindow(handle!);
   }
 
   void minimize() {
-    minimizeWindow(handle);
+    if (!isValidHandle(handle, "minimize")) return;
+    minimizeWindow(handle!);
   }
 
   void maximize() {
-    maximizeWindow(handle);
+    if (!isValidHandle(handle, "maximize")) return;
+    maximizeWindow(handle!);
   }
 
   void restore() {
@@ -171,14 +225,17 @@ class MacOSWindow extends DesktopWindow {
   }
 
   bool get isMaximized {
-    return isWindowMaximized(handle);
+    if (!isValidHandle(handle, "get isMaximized")) return false;
+    return isWindowMaximized(handle!);
   }
 
   void startDragging() {
-    moveWindow(handle);
+    if (!isValidHandle(handle, "start dragging")) return;
+    moveWindow(handle!);
   }
 
   void maximizeOrRestore() {
-    maximizeOrRestoreWindow(handle);
+    if (!isValidHandle(handle, "maximizeOrRestore")) return;
+    maximizeOrRestoreWindow(handle!);
   }
 }

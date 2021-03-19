@@ -11,9 +11,10 @@
 #include <memory>
 #include <sstream>
 
-#include "bitsdojo_window.h"
+#include "./bitsdojo_window_api.h"
 
 const char kChannelName[] = "bitsdojo/window";
+const auto bdwAPI = bitsdojo_window_api();
 
 std::unique_ptr<flutter::MethodChannel<>> bitsdojo_window_channel;
 
@@ -81,7 +82,7 @@ namespace
     {        
         if (method_call.method_name().compare("dragAppWindow") == 0)
         {
-            bool callResult = bitsdojo_window::dragAppWindow();
+            bool callResult = bdwAPI->privateAPI->dragAppWindow();
             if (callResult) {
                 result->Success();
             } else {

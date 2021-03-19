@@ -1,5 +1,6 @@
 import 'package:bitsdojo_window_platform_interface/bitsdojo_window_platform_interface.dart';
 import 'dart:ui';
+export './window_interface.dart';
 
 class BitsdojoWindowWindows extends BitsdojoWindowPlatform {
   BitsdojoWindowWindows() {
@@ -11,6 +12,6 @@ class BitsdojoWindowWindows extends BitsdojoWindowPlatform {
 
   @override
   DesktopWindow get appWindow {
-    return null;
+    return AppWindowNotImplemented();
   }
 }

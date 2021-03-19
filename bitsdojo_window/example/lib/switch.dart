@@ -21,15 +21,15 @@ class AppSkin {
   Color iconMouseDown;
 
   AppSkin(
-      {@required this.sidebar,
-      @required this.backgroundStart,
-      @required this.backgroundEnd,
-      @required this.border,
-      @required this.buttonMouseOver,
-      @required this.buttonMouseDown,
-      @required this.icon,
-      @required this.iconMouseOver,
-      @required this.iconMouseDown});
+      {required this.sidebar,
+      required this.backgroundStart,
+      required this.backgroundEnd,
+      required this.border,
+      required this.buttonMouseOver,
+      required this.buttonMouseDown,
+      required this.icon,
+      required this.iconMouseOver,
+      required this.iconMouseDown});
 }
 
 AppSkin yellowSkin = AppSkin(
@@ -94,12 +94,12 @@ class AppColors extends InheritedWidget {
   final AppSkin colors;
   final Widget child;
   const AppColors({
-    Key key,
-    @required this.colors,
-    @required this.child,
+    Key? key,
+    required this.colors,
+    required this.child,
   }) : super(key: key, child: child);
 
-  static AppColors of(BuildContext context) {
+  static AppColors? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<AppColors>();
   }
 
@@ -164,7 +164,7 @@ class _AppBodyState extends State<AppBody> {
 class LeftSide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final colors = AppColors.of(context).colors;
+    final colors = AppColors.of(context)!.colors;
     return SizedBox(
         width: 200,
         child: Container(
@@ -176,11 +176,11 @@ class LeftSide extends StatelessWidget {
 }
 
 class RightSide extends StatelessWidget {
-  final VoidCallback onButtonPressed;
-  RightSide({Key key, this.onButtonPressed}) : super(key: key);
+  final VoidCallback? onButtonPressed;
+  RightSide({Key? key, this.onButtonPressed}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final colors = AppColors.of(context).colors;
+    final colors = AppColors.of(context)!.colors;
     return Expanded(
         child: Container(
             decoration: BoxDecoration(
@@ -195,7 +195,11 @@ class RightSide extends StatelessWidget {
               Expanded(
                 child: Center(
                     child: RoundedFlatButton(
-                        text: 'Switch', onPressed: () => onButtonPressed())),
+                        text: 'Switch',
+                        onPressed: () {
+                          if (this.onButtonPressed != null)
+                            this.onButtonPressed!();
+                        })),
               )
             ])));
   }
@@ -212,7 +216,7 @@ class RightSideTopArea extends StatelessWidget {
 class WindowButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final colors = AppColors.of(context).colors;
+    final colors = AppColors.of(context)!.colors;
     final buttonColors = WindowButtonColors(
         iconNormal: colors.icon,
         iconMouseDown: colors.iconMouseDown,
@@ -236,14 +240,14 @@ class WindowButtons extends StatelessWidget {
 }
 
 class RoundedFlatButton extends StatelessWidget {
-  final void Function() onPressed;
-  final Color color;
-  final Color mouseOverColor;
-  final Color textColor;
-  final String text;
+  final void Function()? onPressed;
+  final Color? color;
+  final Color? mouseOverColor;
+  final Color? textColor;
+  final String? text;
 
   RoundedFlatButton(
-      {Key key,
+      {Key? key,
       this.onPressed,
       this.color,
       this.mouseOverColor,

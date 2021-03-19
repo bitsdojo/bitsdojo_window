@@ -7,6 +7,7 @@ set(PLUGIN_NAME "${PROJECT_NAME}_plugin")
 
 add_library(${PLUGIN_NAME} STATIC
   "bitsdojo_window.cpp"
+  "bitsdojo_window_api.cpp"
   "bitsdojo_window_plugin.cpp"
 )
 apply_standard_settings(${PLUGIN_NAME})

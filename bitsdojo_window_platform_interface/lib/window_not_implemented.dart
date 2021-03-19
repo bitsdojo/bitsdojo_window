@@ -1,9 +1,12 @@
-import 'package:bitsdojo_window_platform_interface/bitsdojo_window_platform_interface.dart';
+import './window.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:ui';
-import 'package:flutter/widgets.dart';
 
-class OtherWindow extends DesktopWindow {
+class NotImplementedWindow extends DesktopWindow {
+  int get handle {
+    throw UnimplementedError('handle getter has not been implemented');
+  }
+
   set size(Size newSize) {
     throw UnimplementedError('size setter has not been implemented');
   }
@@ -28,11 +31,11 @@ class OtherWindow extends DesktopWindow {
     throw UnimplementedError('position setter has not been implemented.');
   }
 
-  set minSize(Size newSize) {
+  set minSize(Size? newSize) {
     throw UnimplementedError('minSize setter has not been implemented.');
   }
 
-  set maxSize(Size newSize) {
+  set maxSize(Size? newSize) {
     throw UnimplementedError('maxSize setter has not been implemented.');
   }
 
@@ -40,7 +43,7 @@ class OtherWindow extends DesktopWindow {
     throw UnimplementedError('alignment getter has not been implemented.');
   }
 
-  set alignment(Alignment newAlignment) {
+  set alignment(Alignment? newAlignment) {
     throw UnimplementedError('alignment setter has not been implemented.');
   }
 
@@ -110,26 +113,8 @@ class OtherWindow extends DesktopWindow {
   bool get isMaximized {
     throw UnimplementedError('isMaximized getter has not been implemented.');
   }
-}
 
-class OtherAppWindow extends OtherWindow {
-  OtherAppWindow._();
-
-  static final OtherAppWindow _instance = OtherAppWindow._();
-
-  factory OtherAppWindow() {
-    return _instance;
-  }
-}
-
-class BitsdojoWindowOther extends BitsdojoWindowPlatform {
-  @override
-  void doWhenWindowReady(VoidCallback callback) {
-    // do nothing on other platforms
-  }
-
-  @override
-  DesktopWindow get appWindow {
-    return OtherAppWindow();
+  double get scaleFactor {
+    throw UnimplementedError('scaleFactor setter has not been implemented');
   }
 }

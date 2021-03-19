@@ -6,7 +6,6 @@ import 'package:bitsdojo_window_linux/bitsdojo_window_linux.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:io' show Platform;
-import './other_platform.dart';
 
 bool _platformInstanceNeedsInit = true;
 
@@ -22,7 +21,7 @@ void initPlatformInstance() {
       }
     }
   } else {
-    BitsdojoWindowPlatform.instance = BitsdojoWindowOther();
+    BitsdojoWindowPlatform.instance = BitsdojoWindowPlatformNotImplemented();
   }
 }
 

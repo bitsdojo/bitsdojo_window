@@ -4,12 +4,9 @@ typedef MouseStateBuilderCB = Widget Function(
     BuildContext context, MouseState mouseState);
 
 class MouseState {
-  bool isMouseOver;
-  bool isMouseDown;
-  MouseState() {
-    this.isMouseDown = false;
-    this.isMouseOver = false;
-  }
+  bool isMouseOver = false;
+  bool isMouseDown = false;
+  MouseState();
   @override
   String toString() {
     return "isMouseDown: ${this.isMouseDown} - isMouseOver: ${this.isMouseOver}";
@@ -18,16 +15,15 @@ class MouseState {
 
 class MouseStateBuilder extends StatefulWidget {
   final MouseStateBuilderCB builder;
-  final VoidCallback onPressed;
-  MouseStateBuilder({Key key, @required this.builder, this.onPressed})
-      : assert(builder != null),
-        super(key: key);
+  final VoidCallback? onPressed;
+  MouseStateBuilder({Key? key, required this.builder, this.onPressed})
+      : super(key: key);
   @override
   _MouseStateBuilderState createState() => _MouseStateBuilderState();
 }
 
 class _MouseStateBuilderState extends State<MouseStateBuilder> {
-  MouseState _mouseState;
+  late MouseState _mouseState;
   _MouseStateBuilderState() {
     _mouseState = MouseState();
   }
@@ -61,8 +57,10 @@ class _MouseStateBuilderState extends State<MouseStateBuilder> {
                 _mouseState.isMouseDown = false;
                 _mouseState.isMouseOver = false;
               });
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                widget.onPressed();
+              WidgetsBinding.instance!.addPostFrameCallback((_) {
+                if (widget.onPressed != null) {
+                  widget.onPressed!();
+                }
               });
             },
             onTapUp: (_) {},

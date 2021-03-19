@@ -4,8 +4,8 @@ import 'package:flutter/painting.dart';
 import './native_api.dart';
 
 class ScreenInfo {
-  Rect workingRect;
-  Rect fullRect;
+  Rect? workingRect;
+  Rect? fullRect;
 }
 
 ScreenInfo getScreenInfoForWindow(int window) {

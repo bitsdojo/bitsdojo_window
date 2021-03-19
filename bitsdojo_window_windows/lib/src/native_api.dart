@@ -4,46 +4,66 @@ import 'dart:ffi';
 
 final DynamicLibrary _appExecutable = DynamicLibrary.executable();
 
-final _getAppState =
-    _appExecutable.lookupFunction<Uint8 Function(), int Function()>(
-        "bitsdojo_window_getAppState");
+// isBitsdojoWindowLoaded
+typedef Int8 TIsBitsdojoWindowLoaded();
+typedef DTIsBitsdojoWindowLoaded = int Function();
+final DTIsBitsdojoWindowLoaded? _isBitsdojoWindowLoaded =
+    _publicAPI.ref.isBitsdojoWindowLoaded.asFunction();
 
-enum AppState { Unknown, Starting, Ready }
-
-extension AppStateValue on AppState {
-  int get value {
-    switch (this) {
-      case AppState.Unknown:
-        return 0;
-      case AppState.Starting:
-        return 1;
-      case AppState.Ready:
-        return 2;
-    }
-    return null;
+bool isBitsdojoWindowLoaded() {
+  if (_isBitsdojoWindowLoaded == null) {
+    return false;
   }
+  return _isBitsdojoWindowLoaded!() == 1 ? true : false;
 }
 
-AppState getAppState() {
-  return AppState.values[_getAppState()];
+// getAppWindow
+typedef IntPtr TGetAppWindow();
+typedef DGetAppWindow = int Function();
+final DGetAppWindow getAppWindow = _publicAPI.ref.getAppWindow.asFunction();
+
+// setWindowCanBeShown
+typedef Void TSetWindowCanBeShown(Int8 value);
+typedef DSetWindowCanBeShown = void Function(int value);
+final DSetWindowCanBeShown _setWindowCanBeShown =
+    _publicAPI.ref.setWindowCanBeShown.asFunction();
+void setWindowCanBeShown(bool value) => _setWindowCanBeShown(value ? 1 : 0);
+
+// setMinSize
+typedef Void TSetMinSize(Int32 width, Int32 height);
+typedef DSetMinSize = void Function(int width, int height);
+final DSetMinSize setMinSize = _publicAPI.ref.setMinSize.asFunction();
+
+// setMaxSize
+typedef Void TSetMaxSize(Int32 width, Int32 height);
+typedef DSetMaxSize = void Function(int width, int height);
+final DSetMinSize setMaxSize = _publicAPI.ref.setMaxSize.asFunction();
+
+// setWindowCutOnMaximize
+typedef Void TSetWindowCutOnMaximize(Int32 width);
+typedef DSetWindowCutOnMaximize = void Function(int width);
+final DSetWindowCutOnMaximize setWindowCutOnMaximize =
+    _publicAPI.ref.setWindowCutOnMaximize.asFunction();
+
+class BDWPublicAPI extends Struct {
+  external Pointer<NativeFunction<TIsBitsdojoWindowLoaded>>
+      isBitsdojoWindowLoaded;
+  external Pointer<NativeFunction<TGetAppWindow>> getAppWindow;
+  external Pointer<NativeFunction<TSetWindowCanBeShown>> setWindowCanBeShown;
+  external Pointer<NativeFunction<TSetMinSize>> setMinSize;
+  external Pointer<NativeFunction<TSetMaxSize>> setMaxSize;
+  external Pointer<NativeFunction<TSetWindowCutOnMaximize>>
+      setWindowCutOnMaximize;
 }
 
-final _setAppState =
-    _appExecutable.lookupFunction<Void Function(Uint8), void Function(int)>(
-        "bitsdojo_window_setAppState");
-
-void setAppState(AppState newState) {
-  _setAppState(newState.value);
+class BDWAPI extends Struct {
+  external Pointer<BDWPublicAPI> publicAPI;
 }
 
-final getFlutterWindow =
-    _appExecutable.lookupFunction<IntPtr Function(), int Function()>(
-        "bitsdojo_window_getFlutterWindow");
+typedef Pointer<BDWAPI> TBitsdojoWindowAPI();
 
-final setMinSize = _appExecutable.lookupFunction<
-    Void Function(Int32 width, Int32 height),
-    void Function(int width, int height)>("bitsdojo_window_setMinSize");
+final TBitsdojoWindowAPI bitsdojoWindowAPI = _appExecutable
+    .lookup<NativeFunction<TBitsdojoWindowAPI>>("bitsdojo_window_api")
+    .asFunction();
 
-final setMaxSize = _appExecutable.lookupFunction<
-    Void Function(Int32 width, Int32 height),
-    void Function(int width, int height)>("bitsdojo_window_setMaxSize");
+final Pointer<BDWPublicAPI> _publicAPI = bitsdojoWindowAPI().ref.publicAPI;

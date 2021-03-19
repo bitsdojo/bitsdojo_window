@@ -1,3 +1,5 @@
+## 0.1.0
+    - Added null safety support
 ## 0.0.3
 
 * Deprecated some methods

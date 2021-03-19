@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import './mouse_state_builder.dart';
@@ -14,27 +15,40 @@ typedef WindowButtonBuilder = Widget Function(
 class WindowButtonContext {
   BuildContext context;
   MouseState mouseState;
-  Color backgroundColor;
+  Color? backgroundColor;
   Color iconColor;
+  WindowButtonContext(
+      {required this.context,
+      required this.mouseState,
+      this.backgroundColor,
+      required this.iconColor});
 }
 
 class WindowButtonColors {
-  final Color normal;
-  final Color mouseOver;
-  final Color mouseDown;
-  final Color iconNormal;
-  final Color iconMouseOver;
-  final Color iconMouseDown;
-  const WindowButtonColors(
-      {this.normal,
-      this.mouseOver,
-      this.mouseDown,
-      @required this.iconNormal,
-      this.iconMouseOver,
-      this.iconMouseDown});
+  late Color normal;
+  late Color mouseOver;
+  late Color mouseDown;
+  late Color iconNormal;
+  late Color iconMouseOver;
+  late Color iconMouseDown;
+  WindowButtonColors(
+      {Color? normal,
+      Color? mouseOver,
+      Color? mouseDown,
+      Color? iconNormal,
+      Color? iconMouseOver,
+      Color? iconMouseDown}) {
+    this.normal = normal ?? _defaultButtonColors.normal;
+    this.mouseOver = mouseOver ?? _defaultButtonColors.mouseOver;
+    this.mouseDown = mouseDown ?? _defaultButtonColors.mouseDown;
+    this.iconNormal = iconNormal ?? _defaultButtonColors.iconNormal;
+    this.iconMouseOver = iconMouseOver ?? _defaultButtonColors.iconMouseOver;
+    this.iconMouseDown = iconMouseDown ?? _defaultButtonColors.iconMouseDown;
+  }
 }
 
-const _defaultButtonColors = WindowButtonColors(
+final _defaultButtonColors = WindowButtonColors(
+    normal: Colors.transparent,
     iconNormal: Color(0xFF805306),
     mouseOver: Color(0xFF404040),
     mouseDown: Color(0xFF202020),
@@ -42,39 +56,34 @@ const _defaultButtonColors = WindowButtonColors(
     iconMouseDown: Color(0xFFF0F0F0));
 
 class WindowButton extends StatelessWidget {
-  final WindowButtonBuilder builder;
-  final WindowButtonIconBuilder iconBuilder;
-  final WindowButtonColors colors;
+  final WindowButtonBuilder? builder;
+  final WindowButtonIconBuilder? iconBuilder;
+  late final WindowButtonColors colors;
   final bool animate;
-  final EdgeInsets padding;
-  final VoidCallback onPressed;
+  final EdgeInsets? padding;
+  final VoidCallback? onPressed;
 
   WindowButton(
-      {Key key,
-      this.colors,
+      {Key? key,
+      WindowButtonColors? colors,
       this.builder,
       @required this.iconBuilder,
       this.padding,
       this.onPressed,
       this.animate = false})
-      : super(key: key);
+      : super(key: key) {
+    this.colors = colors ?? _defaultButtonColors;
+  }
 
   Color getBackgroundColor(MouseState mouseState) {
-    var colors = this.colors ?? _defaultButtonColors;
-
-    if ((mouseState.isMouseDown) && (colors.mouseDown != null))
-      return colors.mouseDown;
-    if ((mouseState.isMouseOver) && (colors.mouseOver != null))
-      return colors.mouseOver;
+    if (mouseState.isMouseDown) return colors.mouseDown;
+    if (mouseState.isMouseOver) return colors.mouseOver;
     return colors.normal;
   }
 
   Color getIconColor(MouseState mouseState) {
-    final colors = this.colors ?? _defaultButtonColors;
-    if ((mouseState.isMouseDown) && (colors.iconMouseDown != null))
-      return colors.iconMouseDown;
-    if ((mouseState.isMouseOver) && (colors.iconMouseOver != null))
-      return colors.iconMouseOver;
+    if (mouseState.isMouseDown) return colors.iconMouseDown;
+    if (mouseState.isMouseOver) return colors.iconMouseOver;
     return colors.iconNormal;
   }
 
@@ -91,13 +100,14 @@ class WindowButton extends StatelessWidget {
     final buttonSize = appWindow.titleBarButtonSize;
     return MouseStateBuilder(
       builder: (context, mouseState) {
-        WindowButtonContext buttonContext = WindowButtonContext()
-          ..context = context
-          ..backgroundColor = getBackgroundColor(mouseState)
-          ..iconColor = getIconColor(mouseState);
+        WindowButtonContext buttonContext = WindowButtonContext(
+            mouseState: mouseState,
+            context: context,
+            backgroundColor: getBackgroundColor(mouseState),
+            iconColor: getIconColor(mouseState));
 
         var icon = (this.iconBuilder != null)
-            ? this.iconBuilder(buttonContext)
+            ? this.iconBuilder!(buttonContext)
             : Container();
         double borderSize = appWindow.borderSize;
         double defaultPadding =
@@ -115,13 +125,13 @@ class WindowButton extends StatelessWidget {
             color: buttonContext.backgroundColor ?? fadeOutColor,
             child: iconWithPadding);
         var button = (this.builder != null)
-            ? this.builder(buttonContext, icon)
+            ? this.builder!(buttonContext, icon)
             : iconWithPadding;
         return SizedBox(
             width: buttonSize.width, height: buttonSize.height, child: button);
       },
       onPressed: () {
-        if (this.onPressed != null) this.onPressed();
+        if (this.onPressed != null) this.onPressed!();
       },
     );
   }
@@ -129,10 +139,10 @@ class WindowButton extends StatelessWidget {
 
 class MinimizeWindowButton extends WindowButton {
   MinimizeWindowButton(
-      {Key key,
-      WindowButtonColors colors,
-      VoidCallback onPressed,
-      bool animate})
+      {Key? key,
+      WindowButtonColors? colors,
+      VoidCallback? onPressed,
+      bool? animate})
       : super(
             key: key,
             colors: colors,
@@ -144,10 +154,10 @@ class MinimizeWindowButton extends WindowButton {
 
 class MaximizeWindowButton extends WindowButton {
   MaximizeWindowButton(
-      {Key key,
-      WindowButtonColors colors,
-      VoidCallback onPressed,
-      bool animate})
+      {Key? key,
+      WindowButtonColors? colors,
+      VoidCallback? onPressed,
+      bool? animate})
       : super(
             key: key,
             colors: colors,
@@ -157,7 +167,7 @@ class MaximizeWindowButton extends WindowButton {
             onPressed: onPressed ?? () => appWindow.maximizeOrRestore());
 }
 
-const _defaultCloseButtonColors = WindowButtonColors(
+final _defaultCloseButtonColors = WindowButtonColors(
     mouseOver: Color(0xFFD32F2F),
     mouseDown: Color(0xFFB71C1C),
     iconNormal: Color(0xFF805306),
@@ -165,10 +175,10 @@ const _defaultCloseButtonColors = WindowButtonColors(
 
 class CloseWindowButton extends WindowButton {
   CloseWindowButton(
-      {Key key,
-      WindowButtonColors colors,
-      VoidCallback onPressed,
-      bool animate})
+      {Key? key,
+      WindowButtonColors? colors,
+      VoidCallback? onPressed,
+      bool? animate})
       : super(
             key: key,
             colors: colors ?? _defaultCloseButtonColors,

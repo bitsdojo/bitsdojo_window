@@ -7,6 +7,8 @@ import './window.dart';
 
 export './window.dart';
 export './window_common.dart';
+export './window_not_implemented.dart';
+export './platform_not_implemented.dart';
 
 /// The interface that implementations of bitsdojo_window must implement.
 ///
