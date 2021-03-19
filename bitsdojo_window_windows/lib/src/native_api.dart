@@ -20,7 +20,8 @@ extension AppStateValue on AppState {
       case AppState.Ready:
         return 2;
     }
-    return null;
+    // ignore: dead_code
+    throw ("No AppState retrieved");
   }
 }
 

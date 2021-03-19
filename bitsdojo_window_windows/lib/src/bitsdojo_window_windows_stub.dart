@@ -11,6 +11,6 @@ class BitsdojoWindowWindows extends BitsdojoWindowPlatform {
 
   @override
   DesktopWindow get appWindow {
-    return null;
+    throw ("null");
   }
 }

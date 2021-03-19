@@ -10,7 +10,7 @@ import './native_api.dart';
 import 'package:bitsdojo_window_platform_interface/bitsdojo_window_platform_interface.dart';
 import './window_util.dart';
 
-bool isValidHandle(int handle, String operation) {
+bool isValidHandle(int? handle, String operation) {
   if (handle == null) {
     print("Could not $operation - handle is null");
     return false;
@@ -33,10 +33,10 @@ Rect getScreenRectForWindow(int handle) {
 }
 
 class WinWindow extends DesktopWindow {
-  int handle;
-  Size _minSize;
-  Size _maxSize;
-  Alignment _alignment;
+  int? handle;
+  Size? _minSize;
+  Size? _maxSize;
+  Alignment? _alignment;
 
   WinWindow() {
     _alignment = Alignment.center;
@@ -44,14 +44,14 @@ class WinWindow extends DesktopWindow {
 
   Rect get rect {
     final winRect = calloc<RECT>();
-    GetWindowRect(handle, winRect);
+    GetWindowRect(handle!, winRect);
     Rect result = winRect.ref.toRect;
     calloc.free(winRect);
     return result;
   }
 
   set rect(Rect newRect) {
-    setWindowPos(handle, 0, newRect.left.toInt(), newRect.top.toInt(),
+    setWindowPos(handle!, 0, newRect.left.toInt(), newRect.top.toInt(),
         newRect.width.toInt(), newRect.height.toInt(), 0);
   }
 
@@ -77,7 +77,7 @@ class WinWindow extends DesktopWindow {
   }
 
   int get dpi {
-    return GetDpiForWindow(handle);
+    return GetDpiForWindow(handle!);
   }
 
   double get scaleFactor {
@@ -121,61 +121,61 @@ class WinWindow extends DesktopWindow {
     return Size(newWidth, newHeight);
   }
 
-  Alignment get alignment => _alignment;
+  Alignment get alignment => _alignment!;
 
   /// How the window should be aligned on screen
   set alignment(Alignment newAlignment) {
     final sizeOnScreen = this.sizeOnScreen;
     _alignment = newAlignment;
-    final screenRect = getScreenRectForWindow(handle);
-    final rectOnScreen = getRectOnScreen(sizeOnScreen, _alignment, screenRect);
+    final screenRect = getScreenRectForWindow(handle!);
+    final rectOnScreen = getRectOnScreen(sizeOnScreen, _alignment!, screenRect);
     this.rect = rectOnScreen;
   }
 
   set minSize(Size newSize) {
     _minSize = newSize;
-    setMinSize(_minSize.width.toInt(), _minSize.height.toInt());
+    setMinSize(_minSize!.width.toInt(), _minSize!.height.toInt());
   }
 
   set maxSize(Size newSize) {
     _maxSize = newSize;
-    setMaxSize(_maxSize.width.toInt(), _maxSize.height.toInt());
+    setMaxSize(_maxSize!.width.toInt(), _maxSize!.height.toInt());
   }
 
   set size(Size newSize) {
     var width = newSize.width;
 
-    if ((_minSize != null) && (newSize.width < _minSize.width)) {
-      width = _minSize.width;
+    if ((_minSize != null) && (newSize.width < _minSize!.width)) {
+      width = _minSize!.width;
     }
 
-    if ((_maxSize != null) && (newSize.width > _maxSize.width)) {
-      width = _maxSize.width;
+    if ((_maxSize != null) && (newSize.width > _maxSize!.width)) {
+      width = _maxSize!.width;
     }
 
     var height = newSize.height;
 
-    if ((_minSize != null) && (newSize.height < _minSize.height)) {
-      height = _minSize.height;
+    if ((_minSize != null) && (newSize.height < _minSize!.height)) {
+      height = _minSize!.height;
     }
 
-    if ((_maxSize != null) && (newSize.height > _maxSize.height)) {
-      height = _maxSize.height;
+    if ((_maxSize != null) && (newSize.height > _maxSize!.height)) {
+      height = _maxSize!.height;
     }
 
     Size sizeToSet = Size(width, height);
     if (_alignment == null) {
-      SetWindowPos(handle, 0, 0, 0, sizeToSet.width.toInt(),
+      SetWindowPos(handle!, 0, 0, 0, sizeToSet.width.toInt(),
           sizeToSet.height.toInt(), SWP_NOMOVE);
     } else {
       final sizeOnScreen = getSizeOnScreen((sizeToSet));
-      final screenRect = getScreenRectForWindow(handle);
-      this.rect = getRectOnScreen(sizeOnScreen, _alignment, screenRect);
+      final screenRect = getScreenRectForWindow(handle!);
+      this.rect = getRectOnScreen(sizeOnScreen, _alignment!, screenRect);
     }
   }
 
   bool get isMaximized {
-    return (IsZoomed(handle) == 1);
+    return (IsZoomed(handle!) == 1);
   }
 
   @Deprecated("use isVisible instead")
@@ -184,7 +184,7 @@ class WinWindow extends DesktopWindow {
   }
 
   bool get isVisible {
-    return (IsWindowVisible(handle) == 1);
+    return (IsWindowVisible(handle!) == 1);
   }
 
   Offset get position {
@@ -193,21 +193,21 @@ class WinWindow extends DesktopWindow {
   }
 
   set position(Offset newPosition) {
-    SetWindowPos(handle, 0, newPosition.dx.toInt(), newPosition.dy.toInt(), 0,
+    SetWindowPos(handle!, 0, newPosition.dx.toInt(), newPosition.dy.toInt(), 0,
         0, SWP_NOSIZE);
   }
 
   void show() {
     if (!isValidHandle(handle, "show")) return;
     setWindowPos(
-        handle, 0, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW);
-    forceChildRefresh(handle);
+        handle!, 0, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW);
+    forceChildRefresh(handle!);
   }
 
   void hide() {
     if (!isValidHandle(handle, "hide")) return;
     SetWindowPos(
-        handle, 0, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_HIDEWINDOW);
+        handle!, 0, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_HIDEWINDOW);
   }
 
   @Deprecated("use show()/hide() instead")
@@ -221,28 +221,28 @@ class WinWindow extends DesktopWindow {
 
   void close() {
     if (!isValidHandle(handle, "close")) return;
-    PostMessage(handle, WM_SYSCOMMAND, SC_CLOSE, 0);
+    PostMessage(handle!, WM_SYSCOMMAND, SC_CLOSE, 0);
   }
 
   void maximize() {
     if (!isValidHandle(handle, "maximize")) return;
-    PostMessage(handle, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+    PostMessage(handle!, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
   }
 
   void minimize() {
     if (!isValidHandle(handle, "minimize")) return;
 
-    PostMessage(handle, WM_SYSCOMMAND, SC_MINIMIZE, 0);
+    PostMessage(handle!, WM_SYSCOMMAND, SC_MINIMIZE, 0);
   }
 
   void restore() {
     if (!isValidHandle(handle, "restore")) return;
-    PostMessage(handle, WM_SYSCOMMAND, SC_RESTORE, 0);
+    PostMessage(handle!, WM_SYSCOMMAND, SC_RESTORE, 0);
   }
 
   void maximizeOrRestore() {
     if (!isValidHandle(handle, "maximizeOrRestore")) return;
-    if (IsZoomed(handle) == 1) {
+    if (IsZoomed(handle!) == 1) {
       this.restore();
     } else {
       this.maximize();
@@ -251,7 +251,7 @@ class WinWindow extends DesktopWindow {
 
   set title(String newTitle) {
     if (!isValidHandle(handle, "set title")) return;
-    setWindowText(handle, newTitle);
+    setWindowText(handle!, newTitle);
   }
 
   void startDragging() {

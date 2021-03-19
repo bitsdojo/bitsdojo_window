@@ -10,8 +10,8 @@ class BitsdojoWindowMacOS {
     });
   }
 
-  static Future<int> getAppWindow() async {
-    int _appWindow;
+  static Future<int?> getAppWindow() async {
+    int? _appWindow;
     await _channel.invokeMethod('getAppWindow').then((value) {
       _appWindow = value;
     });
