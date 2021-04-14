@@ -1,7 +1,7 @@
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 
-final _libgtk = DynamicLibrary.open('libgtk-3.so');
+final _libgtk = DynamicLibrary.open('libgtk-3.so.0');
 
 final gtkWidgetGetParentWindow = _libgtk.lookupFunction<
     IntPtr Function(IntPtr widget),
