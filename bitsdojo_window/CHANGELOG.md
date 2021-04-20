@@ -1,3 +1,5 @@
+## 0.1.0+1
+    - Fix gtk library name on Linux
 ## 0.1.0
     - Added null safety support
 ## 0.0.9
