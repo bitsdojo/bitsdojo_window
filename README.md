@@ -207,6 +207,8 @@ class WindowButtons extends StatelessWidget {
         CloseWindowButton(colors: closeButtonColors),
       ],
     );
+  }
+}
 ```
 
 # ❤️ **Sponsors - friends helping this package**
