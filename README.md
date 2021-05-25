@@ -33,7 +33,7 @@ Inside your application folder, go to `windows\runner\main.cpp` and add these tw
 
 ```cpp
 #include <bitsdojo_window_windows/bitsdojo_window_plugin.h>
-auto bdw = bitsdojo_window_configure(BDW_CUSTOM_FRAME | BDW_HIDE_ON_STARTUP);
+auto bdw = bitsdojo_window_configure(BDW_CUSTOM_FRAME);
 ```
 
 # For macOS apps
@@ -61,7 +61,7 @@ After changing `NSWindow` to `BitsdojoWindow` add these lines below the line you
 
 ```swift
 override func bitsdojo_window_configure() -> UInt {
-  return BDW_CUSTOM_FRAME | BDW_HIDE_ON_STARTUP
+  return BDW_CUSTOM_FRAME
 }
 ```
 
@@ -71,7 +71,7 @@ Your code should now look like this:
 class MainFlutterWindow: BitsdojoWindow {
     
   override func bitsdojo_window_configure() -> UInt {
-    return BDW_CUSTOM_FRAME | BDW_HIDE_ON_STARTUP
+    return BDW_CUSTOM_FRAME
   }
     
   override func awakeFromNib() {
