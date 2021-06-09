@@ -1,6 +1,6 @@
 library bitsdojo_window_linux;
 
-import './native_api.dart';
+import './native_api.dart' as native;
 import './window.dart';
 
 const notInitializedMessage = """
@@ -13,13 +13,7 @@ class BitsDojoNotInitializedException implements Exception {
 
 class GtkAppWindow extends GtkWindow {
   GtkAppWindow._() {
-    super.handle = getFlutterWindow();
-    //TODO - implement this check
-    /*final isLoaded = isBitsdojoWindowLoaded();
-    if (!isLoaded) {
-      print(notInitializedMessage);
-      throw BitsDojoNotInitializedException;
-    }*/
+    super.handle = native.getAppWindowHandle();
     assert(handle != null, "Could not get Flutter window");
   }
 

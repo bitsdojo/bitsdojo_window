@@ -5,7 +5,12 @@ project(${PROJECT_NAME} LANGUAGES CXX)
 set(PLUGIN_NAME "${PROJECT_NAME}_plugin")
 
 add_library(${PLUGIN_NAME} SHARED
-  "bitsdojo_window.cpp"
+  "debug_helper.cpp"
+  "gtk_utils.cpp"
+  "window_info.cpp"
+  "window_impl.cpp"
+  "api_impl.cpp"
+  "api.cpp"
   "bitsdojo_window_plugin.cpp"
 )
 apply_standard_settings(${PLUGIN_NAME})
