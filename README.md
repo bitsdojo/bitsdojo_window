@@ -83,6 +83,35 @@ If you don't want to use a custom frame and prefer the standard window titlebar 
 
 If you don't want to hide the window on startup, you can remove the `BDW_HIDE_ON_STARTUP` flag from the code above.
 
+# For Linux apps
+
+Inside your application folder, go to `linux\my_application.cc` and add this line at the beginning of the file:
+
+```cpp
+#include <bitsdojo_window_linux/bitsdojo_window_plugin.h>
+```
+Then look for these two lines:
+
+```cpp
+gtk_window_set_default_size(window, 1280, 720);
+gtk_widget_show(GTK_WIDGET(window));
+```
+and change them to this:
+
+```cpp
+auto bdw = bitsdojo_window_from(window);            // <--- add this line
+bdw->setCustomFrame(true);                          // <-- add this line
+//gtk_window_set_default_size(window, 1280, 720);   // <-- comment this line
+gtk_widget_show(GTK_WIDGET(window));
+```
+
+As you can see, we commented the line calling `gtk_window_set_default_size` and added these two lines before `gtk_widget_show(GTK_WIDGET(window));`
+
+```cpp
+auto bdw = bitsdojo_window_from(window);
+bdw->setCustomFrame(true);
+```
+
 # Flutter app integration
 
 Now go to `lib\main.dart` and add this code in the `main` function right after `runApp(MyApp());` :
