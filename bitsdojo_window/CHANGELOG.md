@@ -1,3 +1,5 @@
+## 0.1.1+1
+    - Added Linux usage instructions
 ## 0.1.1
     - Linux support now stable
 ## 0.1.0+1

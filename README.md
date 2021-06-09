@@ -1,6 +1,6 @@
 # bitsdojo_window
 
-A [Flutter package](https://pub.dev/packages/bitsdojo_window) that makes it easy to customize and work with your Flutter desktop app window **on Windows, macOS and Linux** . 
+A [Flutter package](https://pub.dev/packages/bitsdojo_window) that makes it easy to customize and work with your Flutter desktop app window **on Windows, macOS and Linux**. 
 
 Watch the tutorial to get started. Click the image below to watch the video: 
 
@@ -10,7 +10,7 @@ Watch the tutorial to get started. Click the image below to watch the video:
 
 **Features**:
 
-    - Custom window frame - remove standard Windows/macOS titlebar and buttons
+    - Custom window frame - remove standard Windows/macOS/Linux titlebar and buttons
     - Hide window on startup
     - Show/hide window
     - Move window using Flutter widget
@@ -19,9 +19,6 @@ Watch the tutorial to get started. Click the image below to watch the video:
     - Set window position
     - Set window alignment on screen (center/topLeft/topRight/bottomLeft/bottomRight)
     - Set window title
-
-
-Currently working with Flutter desktop apps for **Windows** and **macOS**. Linux support is also planned in the future.
 
 # Getting Started
 

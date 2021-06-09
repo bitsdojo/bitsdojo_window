@@ -1,6 +1,6 @@
 # bitsdojo_window
 
-A Flutter package that makes it easy to customize and work with your Flutter desktop app window **on both Windows and macOS** . 
+A [Flutter package](https://pub.dev/packages/bitsdojo_window) that makes it easy to customize and work with your Flutter desktop app window **on Windows, macOS and Linux**. 
 
 Watch the tutorial to get started. Click the image below to watch the video: 
 
@@ -10,7 +10,7 @@ Watch the tutorial to get started. Click the image below to watch the video:
 
 **Features**:
 
-    - Custom window frame - remove standard Windows/macOS titlebar and buttons
+    - Custom window frame - remove standard Windows/macOS/Linux titlebar and buttons
     - Hide window on startup
     - Show/hide window
     - Move window using Flutter widget
@@ -19,9 +19,6 @@ Watch the tutorial to get started. Click the image below to watch the video:
     - Set window position
     - Set window alignment on screen (center/topLeft/topRight/bottomLeft/bottomRight)
     - Set window title
-
-
-Currently working with Flutter desktop apps for **Windows** and **macOS**. Linux support is also planned in the future.
 
 # Getting Started
 
@@ -82,6 +79,35 @@ class MainFlutterWindow: BitsdojoWindow {
 If you don't want to use a custom frame and prefer the standard window titlebar and buttons, you can remove the `BDW_CUSTOM_FRAME` flag from the code above.
 
 If you don't want to hide the window on startup, you can remove the `BDW_HIDE_ON_STARTUP` flag from the code above.
+
+# For Linux apps
+
+Inside your application folder, go to `linux\my_application.cc` and add this line at the beginning of the file:
+
+```cpp
+#include <bitsdojo_window_linux/bitsdojo_window_plugin.h>
+```
+Then look for these two lines:
+
+```cpp
+gtk_window_set_default_size(window, 1280, 720);
+gtk_widget_show(GTK_WIDGET(window));
+```
+and change them to this:
+
+```cpp
+auto bdw = bitsdojo_window_from(window);            // <--- add this line
+bdw->setCustomFrame(true);                          // <-- add this line
+//gtk_window_set_default_size(window, 1280, 720);   // <-- comment this line
+gtk_widget_show(GTK_WIDGET(window));
+```
+
+As you can see, we commented the line calling `gtk_window_set_default_size` and added these two lines before `gtk_widget_show(GTK_WIDGET(window));`
+
+```cpp
+auto bdw = bitsdojo_window_from(window);
+bdw->setCustomFrame(true);
+```
 
 # Flutter app integration
 
@@ -209,4 +235,16 @@ class WindowButtons extends StatelessWidget {
     );
 ```
 
-TODO: More docs coming soon
+# ❤️ **Sponsors - friends helping this package**
+
+I am developing this package in my spare time. 
+If you want to help so that I can dedicate more time for this, you can become a supporter.
+
+🙏 Thank you!
+
+## ☕️ Coffee supporters:
+Helping with a coffee every month:
+
+ - [Aivan Monceller](https://github.com/geocine)
+
+Want to help? [Become a sponsor](https://github.com/sponsors/bitsdojo)
