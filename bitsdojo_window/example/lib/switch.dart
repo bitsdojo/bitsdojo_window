@@ -10,17 +10,17 @@ import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 
 class AppSkin {
-  Color sidebar;
-  Color backgroundStart;
-  Color backgroundEnd;
-  Color border;
-  Color buttonMouseOver;
-  Color buttonMouseDown;
-  Color icon;
-  Color iconMouseOver;
-  Color iconMouseDown;
+  final Color sidebar;
+  final Color backgroundStart;
+  final Color backgroundEnd;
+  final Color border;
+  final Color buttonMouseOver;
+  final Color buttonMouseDown;
+  final Color icon;
+  final Color iconMouseOver;
+  final Color iconMouseDown;
 
-  AppSkin(
+  const AppSkin(
       {required this.sidebar,
       required this.backgroundStart,
       required this.backgroundEnd,
@@ -32,7 +32,7 @@ class AppSkin {
       required this.iconMouseDown});
 }
 
-AppSkin yellowSkin = AppSkin(
+AppSkin yellowSkin = const AppSkin(
   sidebar: Color(0xFFF6A00C),
   backgroundStart: Color(0xFFFFD500),
   backgroundEnd: Color(0xFFF6A00C),
@@ -44,7 +44,7 @@ AppSkin yellowSkin = AppSkin(
   iconMouseDown: Color(0xFFFFD500),
 );
 
-AppSkin greenSkin = AppSkin(
+AppSkin greenSkin = const AppSkin(
     sidebar: Color(0xFF198A00),
     backgroundStart: Color(0xFF25C901),
     backgroundEnd: Color(0xFF198A00),
@@ -55,7 +55,7 @@ AppSkin greenSkin = AppSkin(
     iconMouseOver: Color(0xFFFFFFFF),
     iconMouseDown: Color(0xFFFFFFFF));
 
-AppSkin blueSkin = AppSkin(
+AppSkin blueSkin = const AppSkin(
     sidebar: Color(0xFF125CDB),
     backgroundStart: Color(0xFF079BF2),
     backgroundEnd: Color(0xFF125CDB),
@@ -66,7 +66,7 @@ AppSkin blueSkin = AppSkin(
     iconMouseOver: Color(0xFFFFFFFF),
     iconMouseDown: Color(0xFFFFFFFF));
 
-AppSkin purpleSkin = AppSkin(
+AppSkin purpleSkin = const AppSkin(
     sidebar: Color(0xFF8700B2),
     backgroundStart: Color(0xFFCC00C5),
     backgroundEnd: Color(0xFF9A00CC),
@@ -77,7 +77,7 @@ AppSkin purpleSkin = AppSkin(
     iconMouseOver: Color(0xFFFFFFFF),
     iconMouseDown: Color(0xFFFFFFFF));
 
-AppSkin cherrySkin = AppSkin(
+AppSkin cherrySkin = const AppSkin(
     sidebar: Color(0xFF850250),
     backgroundStart: Color(0xFFC90078),
     backgroundEnd: Color(0xFF850250),
@@ -92,11 +92,11 @@ final skins = [yellowSkin, greenSkin, blueSkin, purpleSkin, cherrySkin];
 
 class AppColors extends InheritedWidget {
   final AppSkin colors;
-  final Widget child;
+  //final Widget child;
   const AppColors({
     Key? key,
     required this.colors,
-    required this.child,
+    required Widget child,
   }) : super(key: key, child: child);
 
   static AppColors? of(BuildContext context) {
@@ -104,11 +104,11 @@ class AppColors extends InheritedWidget {
   }
 
   @override
-  bool updateShouldNotify(AppColors old) => colors != old.colors;
+  bool updateShouldNotify(AppColors oldWidget) => colors != oldWidget.colors;
 }
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
   doWhenWindowReady(() {
     const initialSize = Size(600, 450);
     final win = appWindow;
@@ -121,14 +121,17 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
         debugShowCheckedModeBanner: false, home: Scaffold(body: AppBody()));
   }
 }
 
 class AppBody extends StatefulWidget {
+  const AppBody({Key? key}) : super(key: key);
+
   @override
   _AppBodyState createState() => _AppBodyState();
 }
@@ -153,7 +156,7 @@ class _AppBodyState extends State<AppBody> {
             color: _skin.border,
             width: 1,
             child: Row(children: [
-              LeftSide(),
+              const LeftSide(),
               RightSide(
                 onButtonPressed: switchSkin,
               )
@@ -162,6 +165,8 @@ class _AppBodyState extends State<AppBody> {
 }
 
 class LeftSide extends StatelessWidget {
+  const LeftSide({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context)!.colors;
@@ -177,7 +182,7 @@ class LeftSide extends StatelessWidget {
 
 class RightSide extends StatelessWidget {
   final VoidCallback? onButtonPressed;
-  RightSide({Key? key, this.onButtonPressed}) : super(key: key);
+  const RightSide({Key? key, this.onButtonPressed}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context)!.colors;
@@ -188,17 +193,16 @@ class RightSide extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [colors.backgroundStart, colors.backgroundEnd],
-                  stops: [0.0, 1.0]),
+                  stops: const [0.0, 1.0]),
             ),
             child: Column(children: [
-              RightSideTopArea(),
+              const RightSideTopArea(),
               Expanded(
                 child: Center(
                     child: RoundedFlatButton(
                         text: 'Switch',
                         onPressed: () {
-                          if (this.onButtonPressed != null)
-                            this.onButtonPressed!();
+                          if (onButtonPressed != null) onButtonPressed!();
                         })),
               )
             ])));
@@ -206,14 +210,19 @@ class RightSide extends StatelessWidget {
 }
 
 class RightSideTopArea extends StatelessWidget {
+  const RightSideTopArea({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return WindowTitleBarBox(
-        child: Row(children: [Expanded(child: MoveWindow()), WindowButtons()]));
+        child: Row(
+            children: [Expanded(child: MoveWindow()), const WindowButtons()]));
   }
 }
 
 class WindowButtons extends StatelessWidget {
+  const WindowButtons({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context)!.colors;
@@ -246,7 +255,7 @@ class RoundedFlatButton extends StatelessWidget {
   final Color? textColor;
   final String? text;
 
-  RoundedFlatButton(
+  const RoundedFlatButton(
       {Key? key,
       this.onPressed,
       this.color,
@@ -262,9 +271,9 @@ class RoundedFlatButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.0),
-              side: BorderSide(color: Colors.white)),
+              side: const BorderSide(color: Colors.white)),
           primary: color ?? Colors.grey[900],
-          padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
           textStyle: TextStyle(
               color: textColor ?? Colors.white,
               fontSize: 12.0,

@@ -1,19 +1,14 @@
-/*
-Don't forget to add these 2 lines at the beggining of windows\runner\main.cpp
-
-#include <bitsdojo_window_windows/bitsdojo_window_plugin.h>
-auto bdw = bitsdojo_window_configure(BDW_CUSTOM_FRAME | BDW_HIDE_ON_STARTUP);
-
-*/
+// Don't forget to make the changes mentioned in
+// https://github.com/bitsdojo/bitsdojo_window#getting-started
 
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
   doWhenWindowReady(() {
     final win = appWindow;
-    final initialSize = Size(600, 450);
+    const initialSize = Size(600, 450);
     win.minSize = initialSize;
     win.size = initialSize;
     win.alignment = Alignment.center;
@@ -25,21 +20,29 @@ void main() {
 const borderColor = Color(0xFF805306);
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-            body: WindowBorder(
-                color: borderColor,
-                width: 1,
-                child: Row(children: [LeftSide(), RightSide()]))));
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body: WindowBorder(
+          color: borderColor,
+          width: 1,
+          child: Row(
+            children: const [LeftSide(), RightSide()],
+          ),
+        ),
+      ),
+    );
   }
 }
 
 const sidebarColor = Color(0xFFF6A00C);
 
 class LeftSide extends StatelessWidget {
+  const LeftSide({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -59,41 +62,45 @@ const backgroundStartColor = Color(0xFFFFD500);
 const backgroundEndColor = Color(0xFFF6A00C);
 
 class RightSide extends StatelessWidget {
+  const RightSide({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Expanded(
-        child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [backgroundStartColor, backgroundEndColor],
-                  stops: [0.0, 1.0]),
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [backgroundStartColor, backgroundEndColor],
+              stops: [0.0, 1.0]),
+        ),
+        child: Column(children: [
+          WindowTitleBarBox(
+            child: Row(
+              children: [Expanded(child: MoveWindow()), const WindowButtons()],
             ),
-            child: Column(children: [
-              WindowTitleBarBox(
-                  child: Row(children: [
-                Expanded(child: MoveWindow()),
-                WindowButtons()
-              ])),
-            ])));
+          )
+        ]),
+      ),
+    );
   }
 }
 
 final buttonColors = WindowButtonColors(
-    iconNormal: Color(0xFF805306),
-    mouseOver: Color(0xFFF6A00C),
-    mouseDown: Color(0xFF805306),
-    iconMouseOver: Color(0xFF805306),
-    iconMouseDown: Color(0xFFFFD500));
+    iconNormal: const Color(0xFF805306),
+    mouseOver: const Color(0xFFF6A00C),
+    mouseDown: const Color(0xFF805306),
+    iconMouseOver: const Color(0xFF805306),
+    iconMouseDown: const Color(0xFFFFD500));
 
 final closeButtonColors = WindowButtonColors(
-    mouseOver: Color(0xFFD32F2F),
-    mouseDown: Color(0xFFB71C1C),
-    iconNormal: Color(0xFF805306),
+    mouseOver: const Color(0xFFD32F2F),
+    mouseDown: const Color(0xFFB71C1C),
+    iconNormal: const Color(0xFF805306),
     iconMouseOver: Colors.white);
 
 class WindowButtons extends StatelessWidget {
+  const WindowButtons({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Row(
