@@ -3,8 +3,9 @@ import '../app_window.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class _MoveWindow extends StatelessWidget {
-  _MoveWindow({Key? key, this.child}) : super(key: key);
+  _MoveWindow({Key? key, this.child, this.onDoubleTap}) : super(key: key);
   final Widget? child;
+  final Function? onDoubleTap;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -12,18 +13,20 @@ class _MoveWindow extends StatelessWidget {
         onPanStart: (details) {
           appWindow.startDragging();
         },
-        onDoubleTap: () => appWindow.maximizeOrRestore(),
+        onDoubleTap: this.onDoubleTap ?? () => appWindow.maximizeOrRestore(),
         child: this.child ?? Container());
   }
 }
 
 class MoveWindow extends StatelessWidget {
   final Widget? child;
+  final Function? onDoubleTap;
   MoveWindow({Key? key, this.child}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     if (child == null) return _MoveWindow();
     return _MoveWindow(
+      onDoubleTap: this.onDoubleTap,
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [Expanded(child: this.child!)]),
