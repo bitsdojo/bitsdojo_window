@@ -16,9 +16,11 @@ class WindowBorder extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isWindowsApp =
         (!kIsWeb) && (defaultTargetPlatform == TargetPlatform.windows);
+    bool isLinuxApp =
+        (!kIsWeb) && (defaultTargetPlatform == TargetPlatform.linux);
 
-    // Only show border on Windows
-    if (!isWindowsApp) {
+    // Only show border on Windows and Linux
+    if (!(isWindowsApp || isLinuxApp)) {
       return child;
     }
 
