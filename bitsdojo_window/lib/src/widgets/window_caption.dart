@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 class _MoveWindow extends StatelessWidget {
   _MoveWindow({Key? key, this.child, this.onDoubleTap}) : super(key: key);
   final Widget? child;
-  final Function? onDoubleTap;
+  final VoidCallback? onDoubleTap;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -20,11 +20,11 @@ class _MoveWindow extends StatelessWidget {
 
 class MoveWindow extends StatelessWidget {
   final Widget? child;
-  final Function? onDoubleTap;
-  MoveWindow({Key? key, this.child}) : super(key: key);
+  final VoidCallback? onDoubleTap;
+  MoveWindow({Key? key, this.child, this.onDoubleTap}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    if (child == null) return _MoveWindow();
+    if (child == null) return _MoveWindow(onDoubleTap: this.onDoubleTap);
     return _MoveWindow(
       onDoubleTap: this.onDoubleTap,
       child: Column(
