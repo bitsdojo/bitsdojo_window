@@ -167,6 +167,21 @@ class MaximizeWindowButton extends WindowButton {
             onPressed: onPressed ?? () => appWindow.maximizeOrRestore());
 }
 
+class RestoreWindowButton extends WindowButton {
+  RestoreWindowButton(
+      {Key? key,
+      WindowButtonColors? colors,
+      VoidCallback? onPressed,
+      bool? animate})
+      : super(
+            key: key,
+            colors: colors,
+            animate: animate ?? false,
+            iconBuilder: (buttonContext) =>
+                RestoreIcon(color: buttonContext.iconColor),
+            onPressed: onPressed ?? () => appWindow.maximizeOrRestore());
+}
+
 final _defaultCloseButtonColors = WindowButtonColors(
     mouseOver: Color(0xFFD32F2F),
     mouseDown: Color(0xFFB71C1C),
