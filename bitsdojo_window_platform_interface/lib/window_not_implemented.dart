@@ -39,6 +39,10 @@ class NotImplementedWindow extends DesktopWindow {
     throw UnimplementedError('maxSize setter has not been implemented.');
   }
 
+  set topmost(bool toomost) {
+    throw UnimplementedError('topmost setter has not been implemented.');
+  }
+
   Alignment get alignment {
     throw UnimplementedError('alignment getter has not been implemented.');
   }

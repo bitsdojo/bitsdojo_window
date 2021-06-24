@@ -209,4 +209,8 @@ void setWindowTitle(GtkWindow* window, const gchar* title) {
     g_idle_add_full(G_PRIORITY_HIGH_IDLE, setWindowTitleProc, params, NULL);
 }
 
+void setTopmost(GtkWindow* window, int topmost){
+    gtk_window_set_keep_above(window,topmost == 1 ? TRUE : FALSE);
+}
+
 }  // namespace bitsdojo_window

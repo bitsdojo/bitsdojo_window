@@ -238,4 +238,10 @@ class MacOSWindow extends DesktopWindow {
     if (!isValidHandle(handle, "maximizeOrRestore")) return;
     maximizeOrRestoreWindow(handle!);
   }
+
+  @override
+  set topmost(bool topmost) {
+    // TODO: implement topmost
+    throw UnimplementedError();
+  }
 }
