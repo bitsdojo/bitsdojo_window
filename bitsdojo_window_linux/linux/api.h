@@ -26,6 +26,7 @@ typedef struct _BDWAPI {
     TMaximizeWindow maximizeWindow;
     TUnmaximizeWindow unmaximizeWindow;
     TSetWindowTitle setWindowTitle;
+    TSetTopmost setTopmost;
 } BDWAPI;
 
 }  // namespace bitsdojo_window

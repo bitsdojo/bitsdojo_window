@@ -293,4 +293,11 @@ class WinWindow extends WinDesktopWindow {
   void startDragging() {
     BitsdojoWindowPlatform.instance.dragAppWindow();
   }
+
+  @override
+  set topmost(bool topmost) {
+    if (!isValidHandle(handle, "topmost")) return;
+
+    PostMessage(handle!, WM_USER + 1, topmost ? 1 : 0, 0);
+  }
 }
