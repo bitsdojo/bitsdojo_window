@@ -99,14 +99,34 @@ final closeButtonColors = WindowButtonColors(
     iconNormal: const Color(0xFF805306),
     iconMouseOver: Colors.white);
 
-class WindowButtons extends StatelessWidget {
+class WindowButtons extends StatefulWidget {
   const WindowButtons({Key? key}) : super(key: key);
+
+  @override
+  _WindowButtonsState createState() => _WindowButtonsState();
+}
+
+class _WindowButtonsState extends State<WindowButtons> {
+  void maximizeOrRestore() {
+    setState(() {
+      appWindow.maximizeOrRestore();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         MinimizeWindowButton(colors: buttonColors),
-        MaximizeWindowButton(colors: buttonColors),
+        appWindow.isMaximized
+            ? RestoreWindowButton(
+                colors: buttonColors,
+                onPressed: maximizeOrRestore,
+              )
+            : MaximizeWindowButton(
+                colors: buttonColors,
+                onPressed: maximizeOrRestore,
+              ),
         CloseWindowButton(colors: closeButtonColors),
       ],
     );
