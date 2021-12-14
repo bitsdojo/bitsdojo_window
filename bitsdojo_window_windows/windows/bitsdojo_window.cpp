@@ -184,11 +184,11 @@ namespace bitsdojo_window {
             }
             return HTBOTTOM;
         }
-        if (pt.x < resizeMargin)
+        if (pt.x < resizeMargin - 9)
         {
             return HTLEFT;
         }
-        if (pt.x > (rc.right - resizeMargin))
+        if (pt.x > (rc.right - resizeMargin + 9))
         {
             return HTRIGHT;
         }
@@ -287,6 +287,8 @@ namespace bitsdojo_window {
         else 
         {
             params->rgrc[0].top -= 1;
+            params->rgrc[0].left += 8;
+            params->rgrc[0].right -= 8;
         }
 
         return 0;
