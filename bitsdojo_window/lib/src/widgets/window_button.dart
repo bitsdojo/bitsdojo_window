@@ -127,8 +127,7 @@ class WindowButton extends StatelessWidget {
         var button = (this.builder != null)
             ? this.builder!(buttonContext, icon)
             : iconWithPadding;
-        return SizedBox(
-            width: buttonSize.width, height: buttonSize.height, child: button);
+        return SizedBox(width: buttonSize.width, child: button);
       },
       onPressed: () {
         if (this.onPressed != null) this.onPressed!();
