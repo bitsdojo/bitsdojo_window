@@ -25,6 +25,7 @@ A new flutter plugin project.
   s.library = 'c++'
   s.xcconfig = {
        'CLANG_CXX_LANGUAGE_STANDARD' => 'c++11',
-       'CLANG_CXX_LIBRARY' => 'libc++'
+       'CLANG_CXX_LIBRARY' => 'libc++',
+       'OTHER_LDCONFIG' => '-lobjc -lc++'
   }
 end
