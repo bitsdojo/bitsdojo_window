@@ -22,4 +22,9 @@ A new flutter plugin project.
 
   s.static_framework = false
   s.compiler_flags = '-fvisibility=hidden'
+  s.library = 'c++'
+  s.xcconfig = {
+       'CLANG_CXX_LANGUAGE_STANDARD' => 'c++11',
+       'CLANG_CXX_LIBRARY' => 'libc++'
+  }
 end
