@@ -5,7 +5,7 @@
 namespace bitsdojo_window {
     typedef bool (*TIsBitsdojoWindowLoaded)();
     bool isBitsdojoWindowLoaded();
-    
+
     typedef void (*TSetWindowCanBeShown)(bool);
     void setWindowCanBeShown(bool value);
 
@@ -23,5 +23,8 @@ namespace bitsdojo_window {
 
     typedef void (*TSetWindowCutOnMaximize)(int);
     void setWindowCutOnMaximize(int value);
+
+    typedef bool (*TIsDPIAware)();
+    bool isDPIAware();
 }
 #endif
