@@ -11,8 +11,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  bitsdojo_window_platform_interface: ^0.1.0
-    #path: ../bitsdojo_window_platform_interface
+  # bitsdojo_window_platform_interface: ^0.1.0
+  bitsdojo_window_platform_interface:
+    path: ../bitsdojo_window_platform_interface
   ffi: ^1.0.0
 
 
