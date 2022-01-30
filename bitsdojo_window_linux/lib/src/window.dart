@@ -1,4 +1,4 @@
-import 'dart:ffi';
+import 'dart:ffi' as ffi;
 import 'dart:ui';
 import 'package:flutter/painting.dart';
 
@@ -23,7 +23,7 @@ class CachedWindowInfo {
 }
 
 Rect getScreenRectForWindow(int handle) {
-  Pointer<Int32> gtkRect = malloc.allocate(sizeOf<Int32>() * 4);
+  ffi.Pointer<ffi.Int32> gtkRect = malloc.allocate(ffi.sizeOf<ffi.Int32>() * 4);
   native.getScreenRect(handle, gtkRect.elementAt(0), gtkRect.elementAt(1),
       gtkRect.elementAt(2), gtkRect.elementAt(3));
   Rect result = Rect.fromLTWH(gtkRect[0].toDouble(), gtkRect[1].toDouble(),
@@ -70,7 +70,7 @@ class GtkWindow extends DesktopWindow {
       return _cached.rect!;
     }
 
-    Pointer<Int32> gtkRect = malloc.allocate(sizeOf<Int32>() * 4);
+    ffi.Pointer<ffi.Int32> gtkRect = malloc.allocate(ffi.sizeOf<ffi.Int32>() * 4);
     native.getPosition(handle!, gtkRect.elementAt(0), gtkRect.elementAt(1));
     native.getSize(handle!, gtkRect.elementAt(2), gtkRect.elementAt(3));
     Rect result = Rect.fromLTWH(gtkRect[0].toDouble(), gtkRect[1].toDouble(),
@@ -96,7 +96,7 @@ class GtkWindow extends DesktopWindow {
       return _cached.rect!.size;
     }
 
-    Pointer<Int32> nativeResult = malloc.allocate(sizeOf<Int32>() * 2);
+    ffi.Pointer<ffi.Int32> nativeResult = malloc.allocate(ffi.sizeOf<ffi.Int32>() * 2);
     native.getSize(
         handle!, nativeResult.elementAt(0), nativeResult.elementAt(1));
     Size result = Size(nativeResult[0].toDouble(), nativeResult[1].toDouble());
@@ -126,7 +126,7 @@ class GtkWindow extends DesktopWindow {
   @override
   double get scaleFactor {
     if (!isValidHandle(handle, "get scaleFactor")) return 1;
-    Pointer<Int32> scaleFactorPtr = malloc.allocate(sizeOf<Int32>());
+    ffi.Pointer<ffi.Int32> scaleFactorPtr = malloc.allocate(ffi.sizeOf<ffi.Int32>());
     native.getScaleFactor(handle!, scaleFactorPtr.elementAt(0));
     double result = scaleFactorPtr[0].toDouble();
     malloc.free(scaleFactorPtr);
