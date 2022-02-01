@@ -21,9 +21,9 @@ flutter:
 dependencies:
   flutter:
     sdk: flutter
-  # bitsdojo_window_platform_interface: ^0.1.0
-  bitsdojo_window_platform_interface:
-    path: ../bitsdojo_window_platform_interface
+  bitsdojo_window_platform_interface: ^0.1.0
+  # bitsdojo_window_platform_interface:
+  #   path: ../bitsdojo_window_platform_interface
   # bitsdojo_window_windows: ^0.1.0
   bitsdojo_window_windows:
     path: ../bitsdojo_window_windows
