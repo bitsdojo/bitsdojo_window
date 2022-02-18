@@ -8,10 +8,14 @@
 #include "./window_util.h"
 #include "./include/bitsdojo_window_windows/bitsdojo_window_plugin.h"
 
-namespace bitsdojo_window {
+namespace bitsdojo_window
+{
 
-    UINT (*GetDpiForWindow) (HWND) = [] (HWND) { return 96u; };
-    int (*GetSystemMetricsForDpi) (int, UINT) = [] (int nIndex, UINT) { return GetSystemMetrics(nIndex); };
+    UINT(*GetDpiForWindow)
+    (HWND) = [](HWND)
+    { return 96u; };
+    int (*GetSystemMetricsForDpi)(int, UINT) = [](int nIndex, UINT)
+    { return GetSystemMetrics(nIndex); };
 
     HWND flutter_window = nullptr;
     HWND flutter_child_window = nullptr;
@@ -28,8 +32,8 @@ namespace bitsdojo_window {
     BOOL during_size_move = FALSE;
     BOOL is_dpi_aware = FALSE;
     BOOL dpi_changed_during_size_move = FALSE;
-    SIZE min_size = { 0, 0 };
-    SIZE max_size = { 0, 0 };
+    SIZE min_size = {0, 0};
+    SIZE max_size = {0, 0};
     // Amount to cut when window is maximized
     int window_cut_on_maximize = 0;
 
@@ -39,7 +43,8 @@ namespace bitsdojo_window {
 
     auto bdw_init = init();
 
-    bool isBitsdojoWindowLoaded() {
+    bool isBitsdojoWindowLoaded()
+    {
         return is_bitsdojo_window_loaded;
     }
 
@@ -51,8 +56,8 @@ namespace bitsdojo_window {
             if (auto fn = GetProcAddress(user32, "GetDpiForWindow"))
             {
                 is_dpi_aware = true;
-                GetDpiForWindow = (decltype(GetDpiForWindow)) fn;
-                GetSystemMetricsForDpi = (decltype(GetSystemMetricsForDpi)) GetProcAddress(user32, "GetSystemMetricsForDpi");
+                GetDpiForWindow = (decltype(GetDpiForWindow))fn;
+                GetSystemMetricsForDpi = (decltype(GetSystemMetricsForDpi))GetProcAddress(user32, "GetSystemMetricsForDpi");
             }
         }
         monitorFlutterWindows();
@@ -66,7 +71,8 @@ namespace bitsdojo_window {
         return 1;
     }
 
-    void setWindowCutOnMaximize(int value) {
+    void setWindowCutOnMaximize(int value)
+    {
         window_cut_on_maximize = value;
     }
 
@@ -82,7 +88,8 @@ namespace bitsdojo_window {
         max_size.cy = height;
     }
 
-    void setWindowCanBeShown(bool value) {
+    void setWindowCanBeShown(bool value)
+    {
         window_can_be_shown = value;
     }
 
@@ -106,7 +113,7 @@ namespace bitsdojo_window {
     {
         if (code == HCBT_CREATEWND)
         {
-            auto createParams = reinterpret_cast<CBT_CREATEWND*>(lparam);
+            auto createParams = reinterpret_cast<CBT_CREATEWND *>(lparam);
             if (!createParams->lpcs->lpCreateParams)
             {
                 return 0;
@@ -156,7 +163,8 @@ namespace bitsdojo_window {
         int resizeBorder = GetSystemMetricsForDpi(SM_CXSIZEFRAME, currentDpi);
         int borderPadding = GetSystemMetricsForDpi(SM_CXPADDEDBORDER, currentDpi);
         bool isMaximized = IsZoomed(window);
-        if (isMaximized) {
+        if (isMaximized)
+        {
             return borderPadding;
         }
         return resizeBorder + borderPadding;
@@ -164,57 +172,69 @@ namespace bitsdojo_window {
 
     void extendIntoClientArea(HWND hwnd)
     {
-        MARGINS margins = { 0, 0, 1, 0 };
+        MARGINS margins = {0, 0, 0, 0};
         DwmExtendFrameIntoClientArea(hwnd, &margins);
+    }
+
+    double getScaleFactor(HWND window)
+    {
+        UINT dpi = GetDpiForWindow(window);
+        return dpi / 96.0;
     }
 
     LRESULT handle_nchittest(HWND window, WPARAM wparam, LPARAM lparam)
     {
-        bool isMaximized = IsZoomed(flutter_window);
-        if (isMaximized)
-            return HTCLIENT;
-        POINT pt = { GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
-        ScreenToClient(window, &pt);
-        RECT rc;
-        GetClientRect(window, &rc);
-        int resizeMargin = getResizeMargin(window);
-        if (pt.y < resizeMargin)
+        POINT cursor{
+            GET_X_LPARAM(lparam),
+            GET_Y_LPARAM(lparam)};
+        const POINT border{
+            ::GetSystemMetrics(SM_CXFRAME) + ::GetSystemMetrics(SM_CXPADDEDBORDER),
+            ::GetSystemMetrics(SM_CYFRAME) + ::GetSystemMetrics(SM_CXPADDEDBORDER)};
+        RECT rect;
+        ::GetWindowRect(window, &rect);
+        // Bit values to handle multiple regions at once at corners.
+        // Determined values are kept, while others are multiplied by |FALSE|.
+        enum region_mask
         {
-            if (pt.x < resizeMargin)
-            {
-                return HTTOPLEFT;
-            }
-            if (pt.x > (rc.right - resizeMargin))
-            {
-                return HTTOPRIGHT;
-            }
-            return HTTOP;
-        }
-        if (pt.y > (rc.bottom - resizeMargin))
+            client = 0b0000,
+            left = 0b0001,
+            right = 0b0010,
+            top = 0b0100,
+            bottom = 0b1000,
+        };
+        // Here border values are added/subtracted from the window hitbox to make
+        // resize border lie outside of the actual client area.
+        // The top-border is handled in child Flutter view's proc.
+        const auto result =
+            left * (cursor.x < (rect.left + border.x)) |
+            right * (cursor.x >= (rect.right - border.x)) |
+            top * (cursor.y < rect.top + border.y) |
+            bottom * (cursor.y >= (rect.bottom - border.y));
+
+        switch (result)
         {
-            if (pt.x < resizeMargin)
-            {
-                return HTBOTTOMLEFT;
-            }
-            if (pt.x > (rc.right - resizeMargin))
-            {
-                return HTBOTTOMRIGHT;
-            }
-            return HTBOTTOM;
-        }
-        if (pt.x < resizeMargin - 9)
-        {
+        case left:
             return HTLEFT;
-        }
-        if (pt.x > (rc.right - resizeMargin + 9))
-        {
+        case right:
             return HTRIGHT;
+        case top:
+            return HTTOP;
+        case bottom:
+            return HTBOTTOM;
+        case top | left:
+            return HTTOPLEFT;
+        case top | right:
+            return HTTOPRIGHT;
+        case bottom | left:
+            return HTBOTTOMLEFT;
+        case bottom | right:
+            return HTBOTTOMRIGHT;
         }
         return HTCLIENT;
     }
 
-
-    RECT getScreenRectForWindow(HWND window) {
+    RECT getScreenRectForWindow(HWND window)
+    {
         MONITORINFO monitorInfo = {};
         monitorInfo.cbSize = DWORD(sizeof(MONITORINFO));
         auto monitor = MonitorFromWindow(window, MONITOR_DEFAULTTONEAREST);
@@ -222,7 +242,8 @@ namespace bitsdojo_window {
         return monitorInfo.rcMonitor;
     }
 
-    RECT getWorkingScreenRectForWindow(HWND window) {
+    RECT getWorkingScreenRectForWindow(HWND window)
+    {
         MONITORINFO monitorInfo = {};
         monitorInfo.cbSize = DWORD(sizeof(MONITORINFO));
         auto monitor = MonitorFromWindow(window, MONITOR_DEFAULTTONEAREST);
@@ -230,22 +251,26 @@ namespace bitsdojo_window {
         return monitorInfo.rcWork;
     }
 
-    void adjustPositionOnRestoreByMove(HWND window, WINDOWPOS* winPos) {
-        if (restore_by_moving == FALSE) return;
+    void adjustPositionOnRestoreByMove(HWND window, WINDOWPOS *winPos)
+    {
+        if (restore_by_moving == FALSE)
+            return;
 
         auto screenRect = getWorkingScreenRectForWindow(window);
-        
-        if (winPos->y < screenRect.top) {
+
+        if (winPos->y < screenRect.top)
+        {
             winPos->y = screenRect.top;
         }
     }
 
-    void adjustMaximizedSize(HWND window, WINDOWPOS* winPos) {
+    void adjustMaximizedSize(HWND window, WINDOWPOS *winPos)
+    {
         auto screenRect = getWorkingScreenRectForWindow(window);
         if ((winPos->x < screenRect.left) &&
             (winPos->y < screenRect.top) &&
-            (winPos->cx > (screenRect.right - screenRect.left))
-            && (winPos->cy > (screenRect.bottom - screenRect.top))) {            
+            (winPos->cx > (screenRect.right - screenRect.left)) && (winPos->cy > (screenRect.bottom - screenRect.top)))
+        {
             winPos->x = screenRect.left;
             winPos->y = screenRect.top;
             winPos->cx = screenRect.right - screenRect.left;
@@ -253,32 +278,30 @@ namespace bitsdojo_window {
         }
     }
 
-    void adjustMaximizedRects(HWND window, NCCALCSIZE_PARAMS* params) {
+    void adjustMaximizedRects(HWND window, NCCALCSIZE_PARAMS *params)
+    {
         auto screenRect = getWorkingScreenRectForWindow(window);
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++)
+        {
             if ((params->rgrc[i].left < screenRect.left) &&
                 (params->rgrc[i].top < screenRect.top) &&
                 (params->rgrc[i].right > screenRect.right) &&
-                (params->rgrc[i].bottom > screenRect.bottom)) {                
+                (params->rgrc[i].bottom > screenRect.bottom))
+            {
                 params->rgrc[i].left = screenRect.left;
                 params->rgrc[i].top = screenRect.top;
                 params->rgrc[i].right = screenRect.right;
                 params->rgrc[i].bottom = screenRect.bottom;
             }
-        }        
-    }
-
-    double getScaleFactor(HWND window) {
-        UINT dpi = GetDpiForWindow(window);
-        return dpi / 96.0;
+        }
     }
 
     LRESULT handle_nccalcsize(HWND window, WPARAM wparam, LPARAM lparam)
     {
-        auto params = reinterpret_cast<NCCALCSIZE_PARAMS*>(lparam);
+        auto params = reinterpret_cast<NCCALCSIZE_PARAMS *>(lparam);
         if (params->lppos)
             adjustMaximizedSize(window, params->lppos);
-        adjustMaximizedRects(window,params);
+        adjustMaximizedRects(window, params);
 
         auto initialRect = params->rgrc[0];
         auto defaultResult = DefSubclassProc(window, WM_NCCALCSIZE, wparam, lparam);
@@ -303,19 +326,54 @@ namespace bitsdojo_window {
             params->rgrc[0].right += sidesCut;
             params->rgrc[0].bottom += sidesCut;
         }
-        else 
+        else
         {
-            params->rgrc[0].top -= 1;
-            params->rgrc[0].left += 8;
-            params->rgrc[0].right -= 8;
+            const POINT border{
+                ::GetSystemMetrics(SM_CXFRAME) + ::GetSystemMetrics(SM_CXPADDEDBORDER),
+                ::GetSystemMetrics(SM_CYFRAME) + ::GetSystemMetrics(SM_CXPADDEDBORDER)};
+            // In Windows, when window frame (i.e. controls & border) is drawn, the space
+            // of the client is actually reduced to make space for the resize border (because
+            // WM_NCHHITTEST is only received inside client area).
+            // In modern Windows (i.e. 10 or 11), this space actually looks transparent, thus
+            // it feels like the resize border is outside client area but it is actually not,
+            // instead the actual client area size is reduced.
+            // The thing to note here is that the top margins are not changed (see behavior
+            // of file explorer for example) & |HTTOP| is handled on the parent HWND.
+            params->rgrc[0].bottom -= border.y;
+            params->rgrc[0].left += border.x;
+            params->rgrc[0].right -= border.x;
         }
-
         return 0;
+    }
+
+    LRESULT handle_child_nchittest(HWND window, WPARAM wparam, LPARAM lparam)
+    {
+        // We don't need |HTTRANSPARENT| at top in maximized window.
+        RECT rect;
+        ::GetWindowRect(window, &rect);
+        if (rect.top <= 0)
+        {
+            return HTCLIENT;
+        }
+        POINT cursor{
+            GET_X_LPARAM(lparam),
+            GET_Y_LPARAM(lparam)};
+        const POINT border{
+            ::GetSystemMetrics(SM_CXFRAME) + ::GetSystemMetrics(SM_CXPADDEDBORDER),
+            ::GetSystemMetrics(SM_CYFRAME) + ::GetSystemMetrics(SM_CXPADDEDBORDER)};
+        // To allow interraction with parent HWND for |HTTOP|.
+        // Other left, right & bottom locations are |HTCLIENT|.
+        if (cursor.y < rect.top + border.y)
+        {
+            return HTTRANSPARENT;
+        }
+        return HTCLIENT;
     }
 
     const static long kWmDpiChangedBeforeParent = 0x02E2;
 
-    void fixDPIScaling() {
+    void fixDPIScaling()
+    {
         SendMessage(flutter_child_window, kWmDpiChangedBeforeParent, 0, 0);
         forceChildRefresh();
     }
@@ -324,24 +382,21 @@ namespace bitsdojo_window {
     {
         switch (message)
         {
-            case WM_CREATE: {
-                LRESULT result = DefSubclassProc(window, message, wparam, lparam);
-                fixDPIScaling();
-                return result;
-            }
-            case WM_NCHITTEST:
+        case WM_CREATE:
+        {
+            LRESULT result = DefSubclassProc(window, message, wparam, lparam);
+            fixDPIScaling();
+            return result;
+        }
+        case WM_NCHITTEST:
+        {
+            if (has_custom_frame == FALSE)
             {
-                if (has_custom_frame == FALSE)
-                {
-                    break;
-                }
-                LRESULT result = handle_nchittest(window, wparam, lparam);
-                if (result != HTCLIENT)
-                {
-                    return HTTRANSPARENT;
-                }
                 break;
             }
+            return handle_child_nchittest(window, wparam, lparam);
+            break;
+        }
         }
         return DefSubclassProc(window, message, wparam, lparam);
     }
@@ -355,7 +410,7 @@ namespace bitsdojo_window {
         SetWindowPos(flutter_child_window, 0, 0, 0, width, height, SWP_NOMOVE | SWP_NOACTIVATE);
     }
 
-    void getSizeOnScreen(SIZE* size)
+    void getSizeOnScreen(SIZE *size)
     {
         UINT dpi = GetDpiForWindow(flutter_window);
         double scale_factor = dpi / 96.0;
@@ -388,19 +443,20 @@ namespace bitsdojo_window {
         return true;
     }
 
-    void handle_bdw_action(HWND window, WPARAM action, LPARAM actionData){
+    void handle_bdw_action(HWND window, WPARAM action, LPARAM actionData)
+    {
         switch (action)
         {
         case BDW_SETWINDOWPOS:
         {
-            auto param = (SWPParam*)(actionData);
+            auto param = (SWPParam *)(actionData);
             SetWindowPos(window, 0, param->x, param->y, param->cx, param->cy, param->uFlags);
             HeapFree(GetProcessHeap(), 0, param);
             break;
         }
         case BDW_SETWINDOWTEXT:
         {
-            auto param = (SWTParam*)(actionData);
+            auto param = (SWTParam *)(actionData);
             SetWindowText(window, param->text);
             HeapFree(GetProcessHeap(), 0, (LPVOID)param->text);
             HeapFree(GetProcessHeap(), 0, param);
@@ -414,196 +470,201 @@ namespace bitsdojo_window {
         }
     }
 
-
-
-LRESULT CALLBACK main_window_proc(HWND window, UINT message, WPARAM wparam, LPARAM lparam, UINT_PTR subclssID, DWORD_PTR refData)
-{
-    switch (message)
+    LRESULT CALLBACK main_window_proc(HWND window, UINT message, WPARAM wparam, LPARAM lparam, UINT_PTR subclssID, DWORD_PTR refData)
     {
-    case WM_ERASEBKGND:
-    {
-        return 1;
-    }
-    case WM_NCCREATE:
-    {
-        flutter_window = window;
-        auto style = GetWindowLongPtr(window, GWL_STYLE);
-        style = style | WS_CLIPCHILDREN;
-        SetWindowLongPtr(window, GWL_STYLE, style);
-        SetProp(window, L"BitsDojoWindow", (HANDLE)(1));
-        break;
-    }
-    case WM_NCHITTEST:
-    {
-        if (has_custom_frame == FALSE)
+        switch (message)
         {
+        case WM_ERASEBKGND:
+        {
+            return 1;
+        }
+        case WM_NCCREATE:
+        {
+            flutter_window = window;
+            auto style = GetWindowLongPtr(window, GWL_STYLE);
+            style = style | WS_CLIPCHILDREN | WS_EX_TRANSPARENT ^ WS_CAPTION;
+            SetWindowLongPtr(window, GWL_STYLE, style);
+            SetProp(window, L"BitsDojoWindow", (HANDLE)(1));
             break;
         }
-        return handle_nchittest(window, wparam, lparam);
-    }
-    case WM_NCCALCSIZE:
-    {
-        if (has_custom_frame == FALSE)
+        case WM_NCHITTEST:
         {
-            break;
-        }
-        return handle_nccalcsize(window, wparam, lparam);
-    }
-    case WM_CREATE:
-    {
-        auto createStruct = reinterpret_cast<CREATESTRUCT *>(lparam);
-        LRESULT result = DefSubclassProc(window, message, wparam, lparam);
-        if (has_custom_frame == TRUE)
-        {
-            extendIntoClientArea(window);
-            SetWindowPos(window, nullptr, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_DRAWFRAME);
-        }
-        centerOnMonitorContainingMouse(window, createStruct->cx, createStruct->cy);
-        if (visible_on_startup == TRUE)
-        {
-            setWindowCanBeShown(TRUE);
-            forceChildRefresh();
-        }
-        return result;
-    }
-    case WM_DPICHANGED:
-    {
-        if (during_size_move == TRUE) {
-            dpi_changed_during_size_move = TRUE;
-        }
-        forceChildRefresh();
-        break;
-    }
-    case WM_SIZE:
-    {
-        if (during_minimize == TRUE) {
-                return 0;
-        }
-        if (bypass_wm_size == TRUE)
-        {
-            return DefWindowProc(window, message, wparam, lparam);
-        }
-        break;
-    }
-    case WM_SYSCOMMAND:
-    {
-        if (wparam == SC_MINIMIZE)
-        {
-            during_minimize = TRUE;
-        }
-        if (wparam == SC_MAXIMIZE)
-        {
-            during_maximize = TRUE;
-        }
-        if (wparam == SC_RESTORE)
-        {
-            during_restore = TRUE;
-        }
-        LRESULT result = DefSubclassProc(window, message, wparam, lparam);
-        during_minimize = FALSE;
-        during_maximize = FALSE;
-        during_restore = FALSE;
-        return result;
-    }
-    case WM_WINDOWPOSCHANGING:
-    {
-        auto winPos = reinterpret_cast<WINDOWPOS *>(lparam);
-        bool isResize = !(winPos->flags & SWP_NOSIZE);
-        if (has_custom_frame && isResize) {
-            adjustMaximizedSize(window, winPos);
-            adjustPositionOnRestoreByMove(window, winPos);
-        }
-        BOOL isShowWindow = ((winPos->flags & SWP_SHOWWINDOW) == SWP_SHOWWINDOW);
-        
-        if ((isShowWindow == TRUE) && (window_can_be_shown == FALSE) && (visible_on_startup == FALSE))
-        {
-            winPos->flags &= ~SWP_SHOWWINDOW;
-        }
-
-        break;
-    }
-    case WM_WINDOWPOSCHANGED:
-    {
-        auto winPos = reinterpret_cast<WINDOWPOS*>(lparam);
-        bool isResize = !(winPos->flags & SWP_NOSIZE);
-        if (has_custom_frame && isResize) {
-            
-            adjustMaximizedSize(window, winPos);
-            adjustPositionOnRestoreByMove(window, winPos);
-        }
-
-        if (false == window_can_be_shown) {
-            break;
-        }
-
-        if (bypass_wm_size == TRUE)
-        {
-            if (isResize && (!during_minimize) && (winPos->cx != 0))
+            if (has_custom_frame == FALSE)
             {
-                adjustChildWindowSize();
+                break;
             }
+            return handle_nchittest(window, wparam, lparam);
         }
-        break;
-    }
-    case WM_GETMINMAXINFO:
-    {
-        auto info = reinterpret_cast<MINMAXINFO *>(lparam);
-        if ((min_size.cx != 0) && (min_size.cy != 0))
+        case WM_NCCALCSIZE:
         {
-            SIZE minSize = min_size;
-            getSizeOnScreen(&minSize);
-            info->ptMinTrackSize.x = minSize.cx;
-            info->ptMinTrackSize.y = minSize.cy;
+            if (has_custom_frame == FALSE)
+            {
+                break;
+            }
+            return handle_nccalcsize(window, wparam, lparam);
         }
-        if ((max_size.cx != 0) && (max_size.cy != 0))
+        case WM_CREATE:
         {
-            SIZE maxSize = max_size;
-            getSizeOnScreen(&maxSize);
-            info->ptMaxTrackSize.x = maxSize.cx;
-            info->ptMaxTrackSize.y = maxSize.cy;
+            auto createStruct = reinterpret_cast<CREATESTRUCT *>(lparam);
+            LRESULT result = DefSubclassProc(window, message, wparam, lparam);
+            if (has_custom_frame == TRUE)
+            {
+                extendIntoClientArea(window);
+                SetWindowPos(window, nullptr, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_DRAWFRAME);
+            }
+            centerOnMonitorContainingMouse(window, createStruct->cx, createStruct->cy);
+            if (visible_on_startup == TRUE)
+            {
+                setWindowCanBeShown(TRUE);
+                forceChildRefresh();
+            }
+            return result;
         }
-        return 0;
-    }
-    case WM_ENTERSIZEMOVE:
-    {
-        bool isMaximized = IsMaximized(window);
-        during_size_move = TRUE;
-        if (isMaximized) {
-            restore_by_moving = TRUE;
-        }        
-        break;
-    }
-    case WM_EXITSIZEMOVE:
-    {
-        during_size_move = FALSE;
-        if (dpi_changed_during_size_move) {         
+        case WM_DPICHANGED:
+        {
+            if (during_size_move == TRUE)
+            {
+                dpi_changed_during_size_move = TRUE;
+            }
             forceChildRefresh();
+            break;
         }
-        dpi_changed_during_size_move = FALSE;
-        restore_by_moving = FALSE;        
-        break;
-    }
-    case WM_BDW_ACTION:
-    {
-        handle_bdw_action(window, wparam, lparam);        
-        break;
-    }
-    default:
-        break;
-    }
-    return DefSubclassProc(window, message, wparam, lparam);
-}
+        case WM_SIZE:
+        {
+            if (during_minimize == TRUE)
+            {
+                return 0;
+            }
+            if (bypass_wm_size == TRUE)
+            {
+                return DefWindowProc(window, message, wparam, lparam);
+            }
+            break;
+        }
+        case WM_SYSCOMMAND:
+        {
+            if (wparam == SC_MINIMIZE)
+            {
+                during_minimize = TRUE;
+            }
+            if (wparam == SC_MAXIMIZE)
+            {
+                during_maximize = TRUE;
+            }
+            if (wparam == SC_RESTORE)
+            {
+                during_restore = TRUE;
+            }
+            LRESULT result = DefSubclassProc(window, message, wparam, lparam);
+            during_minimize = FALSE;
+            during_maximize = FALSE;
+            during_restore = FALSE;
+            return result;
+        }
+        case WM_WINDOWPOSCHANGING:
+        {
+            auto winPos = reinterpret_cast<WINDOWPOS *>(lparam);
+            bool isResize = !(winPos->flags & SWP_NOSIZE);
+            if (has_custom_frame && isResize)
+            {
+                adjustMaximizedSize(window, winPos);
+                adjustPositionOnRestoreByMove(window, winPos);
+            }
+            BOOL isShowWindow = ((winPos->flags & SWP_SHOWWINDOW) == SWP_SHOWWINDOW);
 
-bool dragAppWindow()
-{
-    if (flutter_window == nullptr)
-    {
-        return false;
+            if ((isShowWindow == TRUE) && (window_can_be_shown == FALSE) && (visible_on_startup == FALSE))
+            {
+                winPos->flags &= ~SWP_SHOWWINDOW;
+            }
+
+            break;
+        }
+        case WM_WINDOWPOSCHANGED:
+        {
+            auto winPos = reinterpret_cast<WINDOWPOS *>(lparam);
+            bool isResize = !(winPos->flags & SWP_NOSIZE);
+            if (has_custom_frame && isResize)
+            {
+
+                adjustMaximizedSize(window, winPos);
+                adjustPositionOnRestoreByMove(window, winPos);
+            }
+
+            if (false == window_can_be_shown)
+            {
+                break;
+            }
+
+            if (bypass_wm_size == TRUE)
+            {
+                if (isResize && (!during_minimize) && (winPos->cx != 0))
+                {
+                    adjustChildWindowSize();
+                }
+            }
+            break;
+        }
+        case WM_GETMINMAXINFO:
+        {
+            auto info = reinterpret_cast<MINMAXINFO *>(lparam);
+            if ((min_size.cx != 0) && (min_size.cy != 0))
+            {
+                SIZE minSize = min_size;
+                getSizeOnScreen(&minSize);
+                info->ptMinTrackSize.x = minSize.cx;
+                info->ptMinTrackSize.y = minSize.cy;
+            }
+            if ((max_size.cx != 0) && (max_size.cy != 0))
+            {
+                SIZE maxSize = max_size;
+                getSizeOnScreen(&maxSize);
+                info->ptMaxTrackSize.x = maxSize.cx;
+                info->ptMaxTrackSize.y = maxSize.cy;
+            }
+            return 0;
+        }
+        case WM_ENTERSIZEMOVE:
+        {
+            bool isMaximized = IsMaximized(window);
+            during_size_move = TRUE;
+            if (isMaximized)
+            {
+                restore_by_moving = TRUE;
+            }
+            break;
+        }
+        case WM_EXITSIZEMOVE:
+        {
+            during_size_move = FALSE;
+            if (dpi_changed_during_size_move)
+            {
+                forceChildRefresh();
+            }
+            dpi_changed_during_size_move = FALSE;
+            restore_by_moving = FALSE;
+            break;
+        }
+        case WM_BDW_ACTION:
+        {
+            handle_bdw_action(window, wparam, lparam);
+            break;
+        }
+        default:
+            break;
+        }
+        return DefSubclassProc(window, message, wparam, lparam);
     }
-    ReleaseCapture();
-    SendMessage(flutter_window, WM_SYSCOMMAND, SC_MOVE | HTCAPTION, 0);
-    return true;
-}
+
+    bool dragAppWindow()
+    {
+        if (flutter_window == nullptr)
+        {
+            return false;
+        }
+        ReleaseCapture();
+        SendMessage(flutter_window, WM_SYSCOMMAND, SC_MOVE | HTCAPTION, 0);
+        return true;
+    }
 
 } // bitsdojo_window namespace
 
