@@ -257,6 +257,10 @@ namespace bitsdojo_window {
 
     LRESULT handle_nccalcsize(HWND window, WPARAM wparam, LPARAM lparam)
     {
+        if (wparam == FALSE) {
+            return 0;
+        }
+        
         auto params = reinterpret_cast<NCCALCSIZE_PARAMS*>(lparam);
         adjustMaximizedSize(window, params->lppos);
         adjustMaximizedRects(window,params);
