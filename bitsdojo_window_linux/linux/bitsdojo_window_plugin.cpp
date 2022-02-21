@@ -111,8 +111,8 @@ FlBitsdojoWindowPlugin* bitsdojo_window_plugin_new(FlPluginRegistrar* registrar)
 
 void bitsdojo_window_plugin_register_with_registrar(FlPluginRegistrar* registrar) {
   FlBitsdojoWindowPlugin* plugin = bitsdojo_window_plugin_new(registrar);
-  //  FlView* view = fl_plugin_registrar_get_view(plugin->registrar);
-  //  enhanceFlutterView(GTK_WIDGET(view));
+  FlView* view = fl_plugin_registrar_get_view(plugin->registrar);
+  enhanceFlutterView(GTK_WIDGET(view));
   g_object_unref(plugin);
 }
 
