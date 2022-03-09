@@ -1,4 +1,4 @@
-# bitsdojo_window
+# bitsdojo_window(Fork for Windows7 Support)
 
 A [Flutter package](https://pub.dev/packages/bitsdojo_window) that makes it easy to customize and work with your Flutter desktop app window **on Windows, macOS and Linux**. 
 
