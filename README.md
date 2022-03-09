@@ -8,6 +8,8 @@ Watch the tutorial to get started. Click the image below to watch the video:
 
 <img src="https://raw.githubusercontent.com/bitsdojo/bitsdojo_window/master/resources/screenshot.png">
 
+
+Fork for support Windows7
 **Features**:
 
     - Custom window frame - remove standard Windows/macOS/Linux titlebar and buttons
