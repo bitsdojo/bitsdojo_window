@@ -408,6 +408,7 @@ LRESULT CALLBACK main_window_proc(HWND window, UINT message, WPARAM wparam, LPAR
         flutter_window = window;
         auto style = GetWindowLongPtr(window, GWL_STYLE);
         style = style | WS_CLIPCHILDREN;
+        style &= ~(WS_CAPTION | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SYSMENU | WS_SIZEBOX);
         SetWindowLongPtr(window, GWL_STYLE, style);
         SetProp(window, L"BitsDojoWindow", (HANDLE)(1));
         break;
