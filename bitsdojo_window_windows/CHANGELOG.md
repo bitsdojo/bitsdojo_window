@@ -1,3 +1,5 @@
+## 0.1.1
+    - Reslove ffi 'Size' conflicts
 ## 0.1.0
     - Added null safety support
 ## 0.0.3

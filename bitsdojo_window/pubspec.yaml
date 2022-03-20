@@ -3,6 +3,7 @@ description: A package to help with creating custom windows with Flutter desktop
 version: 0.1.1+1
 homepage: https://www.bitsdojo.com
 repository: https://github.com/bitsdojo/bitsdojo_window
+publish_to: none
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -23,9 +24,9 @@ dependencies:
     sdk: flutter
   bitsdojo_window_platform_interface: ^0.1.0
     #path: ../bitsdojo_window_platform_interface
-  bitsdojo_window_windows: ^0.1.0
-    #path: ../bitsdojo_window_windows
-  bitsdojo_window_macos: ^0.1.0
-    #path: ../bitsdojo_window_macos
-  bitsdojo_window_linux: ^0.1.1
-    #path: ../bitsdojo_window_linux
+  bitsdojo_window_windows: #^0.1.0
+    path: ../bitsdojo_window_windows
+  bitsdojo_window_macos: #^0.1.0
+    path: ../bitsdojo_window_macos
+  bitsdojo_window_linux: #^0.1.1
+    path: ../bitsdojo_window_linux
