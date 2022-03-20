@@ -1,4 +1,4 @@
-import 'dart:ffi';
+import 'dart:ffi' hide Size;
 import 'dart:ui';
 import 'package:flutter/painting.dart';
 
