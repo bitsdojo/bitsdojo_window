@@ -11,7 +11,7 @@ class BitsdojoWindowLinux extends BitsdojoWindowPlatform {
 
   @override
   void doWhenWindowReady(VoidCallback callback) {
-    WidgetsBinding.instance!.waitUntilFirstFrameRasterized.then((value) {
+    WidgetsBinding.instance.waitUntilFirstFrameRasterized.then((value) {
       isInsideDoWhenWindowReady = true;
       callback();
       isInsideDoWhenWindowReady = false;

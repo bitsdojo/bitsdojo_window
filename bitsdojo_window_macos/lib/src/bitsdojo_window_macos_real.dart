@@ -10,7 +10,7 @@ class BitsdojoWindowMacOS extends BitsdojoWindowPlatform {
 
   @override
   void doWhenWindowReady(VoidCallback callback) {
-    WidgetsBinding.instance!.waitUntilFirstFrameRasterized.then((value) {
+    WidgetsBinding.instance.waitUntilFirstFrameRasterized.then((value) {
       setWindowCanBeShown(true);
       setInsideDoWhenWindowReady(true);
       callback();
