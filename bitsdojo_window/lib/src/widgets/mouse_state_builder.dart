@@ -57,7 +57,7 @@ class _MouseStateBuilderState extends State<MouseStateBuilder> {
                 _mouseState.isMouseDown = false;
                 _mouseState.isMouseOver = false;
               });
-              WidgetsBinding.instance!.addPostFrameCallback((_) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (widget.onPressed != null) {
                   widget.onPressed!();
                 }
