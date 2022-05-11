@@ -262,5 +262,4 @@ If you want to help you can [become a sponsor](https://github.com/sponsors/bitsd
 
 ## ☕️ Current sponsors:
 
- - [Ike](https://github.com/ikeofkc)    - $5/month
  - [Cole](https://github.com/The-Funk)  - $5/month
