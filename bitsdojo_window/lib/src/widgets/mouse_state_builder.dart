@@ -13,6 +13,8 @@ class MouseState {
   }
 }
 
+T? _ambiguate<T>(T? value) => value;
+
 class MouseStateBuilder extends StatefulWidget {
   final MouseStateBuilderCB builder;
   final VoidCallback? onPressed;
@@ -57,7 +59,7 @@ class _MouseStateBuilderState extends State<MouseStateBuilder> {
                 _mouseState.isMouseDown = false;
                 _mouseState.isMouseOver = false;
               });
-              WidgetsBinding.instance!.addPostFrameCallback((_) {
+              _ambiguate(WidgetsBinding.instance)!.addPostFrameCallback((_) {
                 if (widget.onPressed != null) {
                   widget.onPressed!();
                 }

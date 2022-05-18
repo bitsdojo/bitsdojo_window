@@ -1,3 +1,5 @@
+## 0.1.2
+    - Flutter 3.0 support
 ## 0.1.1
     - Linux support now stable
 ## 0.1.0+1

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import './mouse_state_builder.dart';
 import '../icons/icons.dart';
