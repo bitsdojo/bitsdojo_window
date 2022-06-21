@@ -38,6 +38,10 @@ open class BitsdojoWindow: NSWindow {
         self.titleVisibility = .hidden
         self.isOpaque = false
         self.isMovable = false
+        // hidden toolbar button
+        self.standardWindowButton(.closeButton)?.isHidden = true
+        self.standardWindowButton(.miniaturizeButton)?.isHidden = true
+        self.standardWindowButton(.zoomButton)?.isHidden = true
     }
     super.order(place, relativeTo: otherWin)
     let windowCanBeShown: Bool = bdwPrivateAPI.windowCanBeShown();
