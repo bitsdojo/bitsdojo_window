@@ -2,7 +2,7 @@ import 'dart:ffi' hide Size;
 import 'package:flutter/painting.dart';
 
 import 'package:ffi/ffi.dart';
-import 'package:win32/win32.dart';
+import 'package:win32/win32.dart' hide Rect, Size;
 
 import './win32_plus.dart';
 import './native_api.dart' as native;
