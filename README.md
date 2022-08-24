@@ -263,6 +263,5 @@ If you want to help you can [become a sponsor](https://github.com/sponsors/bitsd
 ## ☕️ Current sponsors:
 
  - [Cole](https://github.com/The-Funk)
- - [Ruslan Kolbasa](https://github.com/dealnotedev)
 
- Total sponsorship: $10/month
+ Total sponsorships: $5/month
