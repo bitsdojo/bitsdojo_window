@@ -8,3 +8,8 @@ build/
 .flutter-plugins-dependencies
 .flutter-plugins
 pubspec.lock
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
