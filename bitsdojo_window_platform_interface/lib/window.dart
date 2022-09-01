@@ -17,6 +17,8 @@ abstract class DesktopWindow {
   set minSize(Size? newSize);
   set maxSize(Size? newSize);
 
+  set topmost(bool topmost);
+
   Alignment? get alignment;
   set alignment(Alignment? newAlignment);
 
