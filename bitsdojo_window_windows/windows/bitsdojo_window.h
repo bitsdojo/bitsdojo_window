@@ -23,5 +23,8 @@ namespace bitsdojo_window {
 
     typedef void (*TSetWindowCutOnMaximize)(int);
     void setWindowCutOnMaximize(int value);
+    
+    typedef bool (*TIsDPIAware)();
+    bool isDPIAware();
 }
 #endif

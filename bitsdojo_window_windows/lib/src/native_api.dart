@@ -22,6 +22,12 @@ typedef IntPtr TGetAppWindow();
 typedef DGetAppWindow = int Function();
 final DGetAppWindow getAppWindow = _publicAPI.ref.getAppWindow.asFunction();
 
+// isDPIAware
+typedef Int8 TIsDPIAware();
+typedef DIsDPIAware = int Function();
+final DIsDPIAware _isDPIAware = _publicAPI.ref.isDPIAware.asFunction();
+bool isDPIAware() => _isDPIAware() != 0;
+
 // setWindowCanBeShown
 typedef Void TSetWindowCanBeShown(Int8 value);
 typedef DSetWindowCanBeShown = void Function(int value);

@@ -4,7 +4,7 @@
 
 namespace bitsdojo_window {
     BDWPrivateAPI privateAPI = {
-        dragAppWindow
+        dragAppWindow,
     };
 
     BDWPublicAPI publicAPI = {
@@ -13,7 +13,8 @@ namespace bitsdojo_window {
         setWindowCanBeShown,
         setMinSize,
         setMaxSize,
-        setWindowCutOnMaximize
+        setWindowCutOnMaximize,
+        isDPIAware,
     };
 }
 
