@@ -60,6 +60,7 @@ class BDWPublicAPI extends Struct {
   external Pointer<NativeFunction<TSetMaxSize>> setMaxSize;
   external Pointer<NativeFunction<TSetWindowCutOnMaximize>>
       setWindowCutOnMaximize;
+  external Pointer<NativeFunction<TIsDPIAware>> isDPIAware;
 }
 
 class BDWAPI extends Struct {
