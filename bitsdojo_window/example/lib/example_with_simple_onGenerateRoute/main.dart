@@ -12,7 +12,7 @@ void main() {
     win.minSize = initialSize;
     win.size = initialSize;
     win.alignment = Alignment.center;
-    win.title = "Custom Window With No Navigation Flutter";
+    win.title = "Simple Window With OnGenerate Route";
     win.show();
   });
 }
