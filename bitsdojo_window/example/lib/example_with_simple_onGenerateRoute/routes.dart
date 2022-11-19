@@ -7,9 +7,9 @@ import 'screen_two.dart';
 
 class Routes {
   //
-  static const String screenOne = 'splash';
-  static const String screenTwo = 'loader';
-  static const String screenThree = 'login';
+  static const String screenOne = 'screen-one';
+  static const String screenTwo = 'screen-two';
+  static const String screenThree = 'screen-three';
   //
   static Route<T> fadeThrough<T>(RouteSettings settings, WidgetBuilder page,
       {int duration = 500}) {
