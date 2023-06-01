@@ -30,8 +30,8 @@ class MyApp extends StatelessWidget {
         body: WindowBorder(
           color: borderColor,
           width: 1,
-          child: Row(
-            children: const [LeftSide(), RightSide()],
+          child: const Row(
+            children: [LeftSide(), RightSide()],
           ),
         ),
       ),

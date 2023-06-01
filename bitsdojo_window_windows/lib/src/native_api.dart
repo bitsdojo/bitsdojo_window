@@ -51,7 +51,7 @@ typedef DSetWindowCutOnMaximize = void Function(int width);
 final DSetWindowCutOnMaximize setWindowCutOnMaximize =
     _publicAPI.ref.setWindowCutOnMaximize.asFunction();
 
-class BDWPublicAPI extends Struct {
+sealed class BDWPublicAPI extends Struct {
   external Pointer<NativeFunction<TIsBitsdojoWindowLoaded>>
       isBitsdojoWindowLoaded;
   external Pointer<NativeFunction<TGetAppWindow>> getAppWindow;
@@ -63,7 +63,7 @@ class BDWPublicAPI extends Struct {
   external Pointer<NativeFunction<TIsDPIAware>> isDPIAware;
 }
 
-class BDWAPI extends Struct {
+sealed class BDWAPI extends Struct {
   external Pointer<BDWPublicAPI> publicAPI;
 }
 

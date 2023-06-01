@@ -163,7 +163,7 @@ typedef DGetTitleBarHeight = double Function(int window);
 final DGetTitleBarHeight getTitleBarHeight =
     _publicAPI.ref.getTitleBarHeight.asFunction();
 
-class BDWPublicAPI extends Struct {
+sealed class BDWPublicAPI extends Struct {
   external Pointer<NativeFunction<TGetAppWindow>> getAppWindow;
   external Pointer<NativeFunction<TSetWindowCanBeShown>> setWindowCanBeShown;
   external Pointer<NativeFunction<TSetInsideDoWhenWindowReady>>
@@ -189,7 +189,7 @@ class BDWPublicAPI extends Struct {
   external Pointer<NativeFunction<TGetTitleBarHeight>> getTitleBarHeight;
 }
 
-class BDWAPI extends Struct {
+sealed class BDWAPI extends Struct {
   external Pointer<BDWPublicAPI> publicAPI;
 }
 
