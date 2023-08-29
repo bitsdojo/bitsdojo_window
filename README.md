@@ -39,6 +39,8 @@ pub add bitsdojo_window
 The `pubspec.yaml` file should look like this:
 
 ```diff
+// pubspec.yaml
+
   ...
 
   dependencies:
@@ -56,6 +58,8 @@ The `pubspec.yaml` file should look like this:
 Inside your application folder, go to `windows\runner\main.cpp` and change the code look like this:
 
 ```diff
+// windows/runner/main.cpp
+
   ...
 
   #include "flutter_window.h"
@@ -74,6 +78,8 @@ Inside your application folder, go to `windows\runner\main.cpp` and change the c
 Inside your application folder, go to `macos\runner\MainFlutterWindow.swift` and change the code look like this:
 
 ```diff
+// macos/runner/MainFlutterWindow.swift
+
   import Cocoa
   import FlutterMacOS
 + import bitsdojo_window_macos
@@ -102,6 +108,8 @@ If you don't want to hide the window on startup, you can remove the `BDW_HIDE_ON
 Inside your application folder, go to `linux\my_application.cc` and change the code look like this:
 
 ```diff
+// linux/my_application.cc
+
   ...
   #include "flutter/generated_plugin_registrant.h"
 + #include <bitsdojo_window_linux/bitsdojo_window_plugin.h>
@@ -130,6 +138,7 @@ Inside your application folder, go to `linux\my_application.cc` and change the c
 Now go to `lib\main.dart` and change the code look like this:
 
 ```diff
+// lib/main.dart
 
   import 'package:flutter/material.dart';
 + import 'package:bitsdojo_window/bitsdojo_window.dart';
