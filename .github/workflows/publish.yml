@@ -57,7 +57,7 @@ jobs:
         run: cd ./bitsdojo_window_platform_interface && dart pub get
 
       - name: Publish bitsdojo_window_platform_interface
-        uses: sakebook/actions-flutter-pub-publisher@1.4.1
+        uses: sakebook/actions-flutter-pub-publisher@v1.4.1
         with:
           package_directory: ./bitsdojo_window_platform_interface
           flutter_package: false
