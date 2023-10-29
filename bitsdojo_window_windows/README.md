@@ -1,4 +1,4 @@
-# bitsdojo_window_windows
+# bitsdojo_window_windows_v3
 
 The Windows implementation of [`bitsdojo_window`][1].
 

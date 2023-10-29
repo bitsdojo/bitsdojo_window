@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#include "include/bitsdojo_window_linux/bitsdojo_window_plugin.h"
+#include "include/bitsdojo_window_linux_v3/bitsdojo_window_plugin.h"
 
 #include <cmath>
 #include <flutter_linux/flutter_linux.h>

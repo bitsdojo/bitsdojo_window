@@ -1,4 +1,4 @@
-# bitsdojo_window_platform_interface
+# bitsdojo_window_platform_interface_v3
 
 A common platform interface for the [`bitsdojo_window`][1] plugin.
 
@@ -19,8 +19,8 @@ platform-specific behavior, and when you register your plugin, set the default
 Strongly prefer non-breaking changes (such as adding a method to the interface)
 over breaking changes for this package.
 
-See https://flutter.dev/go/platform-interface-breaking-changes for a discussion
+See <https://flutter.dev/go/platform-interface-breaking-changes> for a discussion
 on why a less-clean interface is preferable to a breaking change.
 
 [1]: ../bitsdojo_window
-[2]: lib/bitsdojo_window_platform_interface.dart
+[2]: lib/bitsdojo_window_platform_interface_v3.dart

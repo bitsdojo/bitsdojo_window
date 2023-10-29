@@ -4,7 +4,7 @@
 #include "./debug_helper.h"
 #include "./gtk_utils.h"
 #include "./window_info.h"
-#include "include/bitsdojo_window_linux/bitsdojo_window_plugin.h"
+#include "include/bitsdojo_window_linux_v3/bitsdojo_window_plugin.h"
 
 namespace bitsdojo_window {
 

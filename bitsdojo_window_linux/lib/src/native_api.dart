@@ -1,4 +1,4 @@
-library bitsdojo_window_linux;
+library bitsdojo_window_linux_v3;
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
@@ -93,7 +93,7 @@ typedef Void TSetWindowTitle(IntPtr window, Pointer<Utf8> title);
 typedef DSetWindowTitle = void Function(int window, Pointer<Utf8> title);
 final DSetWindowTitle setWindowTitle = _theAPI.ref.setWindowTitle.asFunction();
 
- sealed class  BDWAPI extends Struct {
+sealed class BDWAPI extends Struct {
   external Pointer<NativeFunction<TGetAppWindowHandle>> getAppWindowHandle;
   external Pointer<NativeFunction<TGetScreenRect>> getScreenRect;
   external Pointer<NativeFunction<TGetScaleFactor>> getScaleFactor;

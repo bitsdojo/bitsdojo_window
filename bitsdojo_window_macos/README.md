@@ -1,4 +1,4 @@
-# bitsdojo_window_macos
+# bitsdojo_window_macos_v3
 
 The macOS implementation of [`bitsdojo_window`][1].
 

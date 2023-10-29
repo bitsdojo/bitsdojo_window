@@ -6,7 +6,7 @@
 #include "./bitsdojo_window_common.h"
 #include "bitsdojo_window.h"
 #include "./window_util.h"
-#include "./include/bitsdojo_window_windows/bitsdojo_window_plugin.h"
+#include "./include/bitsdojo_window_windows_v3/bitsdojo_window_plugin.h"
 
 namespace bitsdojo_window {
     UINT (*GetDpiForWindow) (HWND) = [] (HWND) { return 96u; };

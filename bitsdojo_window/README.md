@@ -1,8 +1,8 @@
 # bitsdojo_window
 
-A [Flutter package](https://pub.dev/packages/bitsdojo_window) that makes it easy to customize and work with your Flutter desktop app window **on Windows, macOS and Linux**. 
+A [Flutter package](https://pub.dev/packages/bitsdojo_window) that makes it easy to customize and work with your Flutter desktop app window **on Windows, macOS and Linux**.
 
-Watch the tutorial to get started. Click the image below to watch the video: 
+Watch the tutorial to get started. Click the image below to watch the video:
 
 [![IMAGE ALT TEXT](https://img.youtube.com/vi/bee2AHQpGK4/0.jpg)](https://www.youtube.com/watch?v=bee2AHQpGK4 "Click to open")
 
@@ -29,7 +29,7 @@ Install the package using `pubspec.yaml`
 Inside your application folder, go to `windows\runner\main.cpp` and add these two lines at the beginning of the file:
 
 ```cpp
-#include <bitsdojo_window_windows/bitsdojo_window_plugin.h>
+#include <bitsdojo_window_windows_v3/bitsdojo_window_plugin.h>
 auto bdw = bitsdojo_window_configure(BDW_CUSTOM_FRAME | BDW_HIDE_ON_STARTUP);
 ```
 
@@ -39,7 +39,7 @@ Inside your application folder, go to `macos\runner\MainFlutterWindow.swift` and
 
 ```swift
 import FlutterMacOS
-import bitsdojo_window_macos // Add this line
+import bitsdojo_window_macos_v3 // Add this line
 ```
 
 Then change this line from:
@@ -74,6 +74,7 @@ class MainFlutterWindow: BitsdojoWindow {
   override func awakeFromNib() {
     ... //rest of your code
 ```
+
 #
 
 If you don't want to use a custom frame and prefer the standard window titlebar and buttons, you can remove the `BDW_CUSTOM_FRAME` flag from the code above.
@@ -85,14 +86,16 @@ If you don't want to hide the window on startup, you can remove the `BDW_HIDE_ON
 Inside your application folder, go to `linux\my_application.cc` and add this line at the beginning of the file:
 
 ```cpp
-#include <bitsdojo_window_linux/bitsdojo_window_plugin.h>
+#include <bitsdojo_window_linux_v3/bitsdojo_window_plugin.h>
 ```
+
 Then look for these two lines:
 
 ```cpp
 gtk_window_set_default_size(window, 1280, 720);
 gtk_widget_show(GTK_WIDGET(window));
 ```
+
 and change them to this:
 
 ```cpp
@@ -128,6 +131,7 @@ void main() {
   });
 }
 ```
+
 This will set an initial size and a minimum size for your application window, center it on the screen and show it on the screen.
 
 You can find examples in the `example` folder.
@@ -249,12 +253,14 @@ class WindowButtons extends StatelessWidget {
   }
 }
 ```
+
 </details>
 
 #
+
 # ❤️ **Sponsors - friends helping this package**
 
-I am developing this package in my spare time and any help is appreciated. 
+I am developing this package in my spare time and any help is appreciated.
 If you want to help you can [become a sponsor](https://github.com/sponsors/bitsdojo).
 
 🙏 Thank you!

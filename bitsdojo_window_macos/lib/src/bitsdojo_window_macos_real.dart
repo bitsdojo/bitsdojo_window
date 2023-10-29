@@ -1,6 +1,6 @@
-library bitsdojo_window_macos;
+library bitsdojo_window_macos_v3;
 
-import 'package:bitsdojo_window_platform_interface/bitsdojo_window_platform_interface.dart';
+import 'package:bitsdojo_window_platform_interface_v3/bitsdojo_window_platform_interface_v3.dart';
 import 'package:flutter/widgets.dart';
 import './app_window.dart';
 import './native_api.dart';

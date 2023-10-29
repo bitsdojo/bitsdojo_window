@@ -1,4 +1,4 @@
-import 'package:bitsdojo_window_platform_interface/bitsdojo_window_platform_interface.dart';
+import 'package:bitsdojo_window_platform_interface_v3/bitsdojo_window_platform_interface_v3.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import './window_util.dart';

@@ -6,7 +6,7 @@ import 'package:win32/win32.dart';
 
 import './win32_plus.dart';
 import './native_api.dart' as native;
-import 'package:bitsdojo_window_platform_interface/bitsdojo_window_platform_interface.dart';
+import 'package:bitsdojo_window_platform_interface_v3/bitsdojo_window_platform_interface_v3.dart';
 import './window_util.dart';
 import './window_interface.dart';
 

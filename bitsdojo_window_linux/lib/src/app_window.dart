@@ -1,4 +1,4 @@
-library bitsdojo_window_linux;
+library bitsdojo_window_linux_v3;
 
 import './native_api.dart' as native;
 import './window.dart';

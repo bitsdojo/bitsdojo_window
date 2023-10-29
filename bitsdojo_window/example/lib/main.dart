@@ -1,5 +1,5 @@
 // Don't forget to make the changes mentioned in
-// https://github.com/bitsdojo/bitsdojo_window#getting-started
+// https://github.com/DartGit-dev/bitsdojo_window#getting-started
 
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';

@@ -1,4 +1,4 @@
-library bitsdojo_window_macos;
+library bitsdojo_window_macos_v3;
 
 import './window.dart';
 import './native_api.dart';

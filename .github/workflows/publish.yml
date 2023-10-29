@@ -1,0 +1,97 @@
+name: Publish
+
+on:
+  push:
+    # tags:
+    #   - "v[0-9]+.[0-9]+.[0-9]+*"
+    # branches: [master]
+  # pull_request:
+  #   branches: [main]
+  # workflow_dispatch:
+
+env:
+  PUB_ENVIRONMENT: bot.github
+
+jobs:
+  # analyze:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: subosito/flutter-action@v2
+  #       with:
+  #         channel: stable
+
+  #     - name: Install dependencies
+  #       run: flutter pub get
+
+  #     - name: Verify formatting
+  #       run: dart format --output=none --set-exit-if-changed .
+
+  #     - name: Analyze source code
+  #       run: flutter analyze --fatal-infos
+
+  publish_windows:
+    # needs: analyze
+    # strategy:
+    #   fail-fast: false
+    #   matrix:
+    #     platform: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: windows-latest
+
+    steps:
+      - name: Set git to use LF
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+
+      - name: Setup github keys
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Publish bitsdojo_window_platform_interface
+        uses: k-paxian/dart-package-publisher@master
+        with:
+          relativePath: ./bitsdojo_window_platform_interface
+          credentialJson: ${{ secrets.CREDENTIALS_JSON }}
+          dryRunOnly: true
+          skipTests: true
+          suppressBuildRunner: true
+          flutter: true
+
+
+      # - name: Run tests
+      #   run: dart test --reporter expanded --exclude-tags "remote_fetch" --platform=vm
+
+  # publish:
+  #   needs: test
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - name: Set git to use LF
+  #       run: |
+  #         git config --global core.autocrlf false
+  #         git config --global core.eol lf
+
+  #     - uses: actions/checkout@v3
+  #     - uses: subosito/flutter-action@v2
+  #       with:
+  #         channel: stable
+
+  #     - name: Install dependencies
+  #       run: flutter pub get
+
+  #     - name: Publish
+  #       uses: k-paxian/dart-package-publisher@master
+  #       with:
+  #         credentialJson: ${{ secrets.CREDENTIALS_JSON }}
+  #         skipTests: true
+  #         suppressBuildRunner: true
+  #         flutter: true

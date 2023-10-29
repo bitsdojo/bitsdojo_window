@@ -3,7 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  bitsdojo_window_windows
+  bitsdojo_window_windows_v3
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

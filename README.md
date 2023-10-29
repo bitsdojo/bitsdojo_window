@@ -29,7 +29,7 @@ Install the package using `pubspec.yaml`
 Inside your application folder, go to `windows\runner\main.cpp` and add these two lines at the beginning of the file:
 
 ```cpp
-#include <bitsdojo_window_windows/bitsdojo_window_plugin.h>
+#include <bitsdojo_window_windows_v3/bitsdojo_window_plugin.h>
 auto bdw = bitsdojo_window_configure(BDW_CUSTOM_FRAME | BDW_HIDE_ON_STARTUP);
 ```
 
@@ -39,7 +39,7 @@ Inside your application folder, go to `macos\runner\MainFlutterWindow.swift` and
 
 ```swift
 import FlutterMacOS
-import bitsdojo_window_macos // Add this line
+import bitsdojo_window_macos_v3 // Add this line
 ```
 
 Then change this line from:
@@ -86,7 +86,7 @@ If you don't want to hide the window on startup, you can remove the `BDW_HIDE_ON
 Inside your application folder, go to `linux\my_application.cc` and add this line at the beginning of the file:
 
 ```cpp
-#include <bitsdojo_window_linux/bitsdojo_window_plugin.h>
+#include <bitsdojo_window_linux_v3/bitsdojo_window_plugin.h>
 ```
 
 Then look for these two lines:

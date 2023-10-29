@@ -1,8 +1,8 @@
-import 'package:bitsdojo_window_platform_interface/bitsdojo_window_platform_interface.dart';
-import 'package:bitsdojo_window_platform_interface/method_channel_bitsdojo_window.dart';
-import 'package:bitsdojo_window_windows/bitsdojo_window_windows.dart';
-import 'package:bitsdojo_window_macos/bitsdojo_window_macos.dart';
-import 'package:bitsdojo_window_linux/bitsdojo_window_linux.dart';
+import 'package:bitsdojo_window_platform_interface_v3/bitsdojo_window_platform_interface_v3.dart';
+import 'package:bitsdojo_window_platform_interface_v3/method_channel_bitsdojo_window.dart';
+import 'package:bitsdojo_window_windows_v3/bitsdojo_window_windows_v3.dart';
+import 'package:bitsdojo_window_macos_v3/bitsdojo_window_macos_v3.dart';
+import 'package:bitsdojo_window_linux_v3/bitsdojo_window_linux_v3.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:io' show Platform;
