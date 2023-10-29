@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 
-import 'bitsdojo_window_platform_interface_v3.dart';
+import 'bitsdojo_window_platform_interface.dart';
 
 const MethodChannel _channel = MethodChannel('bitsdojo/window');
 

@@ -1,4 +1,4 @@
-import 'package:bitsdojo_window_platform_interface_v3/bitsdojo_window_platform_interface_v3.dart';
+import 'package:bitsdojo_window_platform_interface_v3/bitsdojo_window_platform_interface.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:ui';
 import 'package:flutter/widgets.dart';

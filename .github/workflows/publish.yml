@@ -54,17 +54,16 @@ jobs:
           channel: stable
 
       - name: Install dependencies
-        run: cd ./bitsdojo_window_platform_interface && flutter pub get
+        run: cd ./bitsdojo_window_platform_interface && dart pub get
 
       - name: Publish bitsdojo_window_platform_interface
-        uses: k-paxian/dart-package-publisher@master
+        uses: sakebook/actions-flutter-pub-publisher@1.4.1
         with:
-          relativePath: ./bitsdojo_window_platform_interface
-          credentialJson: ${{ secrets.CREDENTIALS_JSON }}
-          dryRunOnly: true
-          skipTests: true
-          suppressBuildRunner: true
-          flutter: true
+          package_directory: ./bitsdojo_window_platform_interface
+          flutter_package: false
+          credential: ${{ secrets.CREDENTIALS_JSON }}
+          dry_run: true
+          skip_test: true
 
 
       # - name: Run tests
