@@ -13,7 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  bitsdojo_window:
+  bitsdojo_window_v3:
     # When depending on this package from a real application you should use:
     #   bitsdojo_window: ^x.y.z
     # See https://dart.dev/tools/pub/dependencies#version-constraints

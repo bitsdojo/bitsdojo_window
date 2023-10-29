@@ -1,4 +1,4 @@
-library bitsdojo_window_linux_v3;
+library bitsdojo_window_linux;
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';

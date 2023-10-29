@@ -1,7 +1,7 @@
 library bitsdojo_window_windows_v3;
 
 import 'package:flutter/widgets.dart';
-import 'package:bitsdojo_window_platform_interface_v3/bitsdojo_window_platform_interface_v3.dart';
+import 'package:bitsdojo_window_platform_interface_v3/bitsdojo_window_platform_interface.dart';
 import './window.dart';
 import './app_window.dart';
 import './native_api.dart';

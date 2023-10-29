@@ -1,6 +1,6 @@
-library bitsdojo_window_linux_v3;
+library bitsdojo_window_linux;
 
-import 'package:bitsdojo_window_platform_interface_v3/bitsdojo_window_platform_interface_v3.dart';
+import 'package:bitsdojo_window_platform_interface_v3/bitsdojo_window_platform_interface.dart';
 import './window.dart';
 import './app_window.dart';
 import 'package:flutter/widgets.dart';

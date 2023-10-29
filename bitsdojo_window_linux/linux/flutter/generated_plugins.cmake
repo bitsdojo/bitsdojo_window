@@ -3,7 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  bitsdojo_window_linux_v3
+  bitsdojo_window_linux
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-set(PROJECT_NAME "bitsdojo_window_windows_v3")
+set(PROJECT_NAME "bitsdojo_window_windows")
 set(PARENT_PROJECT_NAME,"bitsdojo_window")
 project(${PROJECT_NAME} LANGUAGES CXX)
 

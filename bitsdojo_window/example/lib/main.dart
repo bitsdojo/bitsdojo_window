@@ -2,7 +2,7 @@
 // https://github.com/DartGit-dev/bitsdojo_window#getting-started
 
 import 'package:flutter/material.dart';
-import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:bitsdojo_window_v3/bitsdojo_window_v3.dart';
 
 void main() {
   runApp(const MyApp());

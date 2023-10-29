@@ -7,7 +7,7 @@ auto bdw = bitsdojo_window_configure(BDW_CUSTOM_FRAME | BDW_HIDE_ON_STARTUP);
 */
 
 import 'package:flutter/material.dart';
-import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:bitsdojo_window_v3/bitsdojo_window_v3.dart';
 
 class AppSkin {
   final Color sidebar;
@@ -272,7 +272,7 @@ class RoundedFlatButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.0),
               side: const BorderSide(color: Colors.white)),
-          primary: color ?? Colors.grey[900],
+          backgroundColor: color ?? Colors.grey[900],
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
           textStyle: TextStyle(
               color: textColor ?? Colors.white,

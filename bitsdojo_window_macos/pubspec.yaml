@@ -12,13 +12,9 @@ dependencies:
   flutter:
     sdk: flutter
   bitsdojo_window_platform_interface_v3:
-    ^0.2.0
+    ^3.0.0
     # path: ../bitsdojo_window_platform_interface_v3
   ffi: ^2.0.0
-
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
 
 flutter:
   plugin:

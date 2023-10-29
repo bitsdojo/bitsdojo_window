@@ -5,7 +5,7 @@ import 'package:ffi/ffi.dart';
 
 import './native_api.dart' as native;
 import './gtk.dart';
-import 'package:bitsdojo_window_platform_interface_v3/bitsdojo_window_platform_interface_v3.dart';
+import 'package:bitsdojo_window_platform_interface_v3/bitsdojo_window_platform_interface.dart';
 
 var isInsideDoWhenWindowReady = false;
 

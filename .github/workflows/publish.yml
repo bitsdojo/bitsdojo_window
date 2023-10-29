@@ -60,8 +60,7 @@ jobs:
         uses: sakebook/actions-flutter-pub-publisher@v1.4.1
         with:
           package_directory: ./bitsdojo_window_platform_interface
-          flutter_package: false
-          credential: ${{ secrets.CREDENTIALS_JSON }}
+          flutter_package: true
           dry_run: true
           skip_test: true
 

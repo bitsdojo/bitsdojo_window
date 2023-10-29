@@ -23,4 +23,4 @@ See <https://flutter.dev/go/platform-interface-breaking-changes> for a discussio
 on why a less-clean interface is preferable to a breaking change.
 
 [1]: ../bitsdojo_window
-[2]: lib/bitsdojo_window_platform_interface_v3.dart
+[2]: lib/bitsdojo_window_platform_interface.dart

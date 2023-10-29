@@ -1,4 +1,4 @@
-library bitsdojo_window_windows_v3;
+library bitsdojo_window_windows;
 
 import 'dart:ffi';
 
