@@ -54,7 +54,7 @@ jobs:
           channel: stable
 
       - name: Install dependencies
-        run: flutter pub get
+        run: cd ./bitsdojo_window_platform_interface && flutter pub get
 
       - name: Publish bitsdojo_window_platform_interface
         uses: k-paxian/dart-package-publisher@master
