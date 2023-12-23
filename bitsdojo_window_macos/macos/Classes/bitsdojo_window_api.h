@@ -32,6 +32,7 @@ typedef struct _BDWPublicAPI
 typedef struct _BDWPrivateAPI{
     TWindowCanBeShown windowCanBeShown;
     TSetAppWindow setAppWindow;
+    TAppWindowIsSet appWindowIsSet;
 } BDWPrivateAPI;
 
 typedef struct _BDWAPI{

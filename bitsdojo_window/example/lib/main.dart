@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 
 void main() {
+  appWindow.size = const Size(600, 450);
   runApp(const MyApp());
+  appWindow.show();
   doWhenWindowReady(() {
     final win = appWindow;
     const initialSize = Size(600, 450);
@@ -20,7 +22,7 @@ void main() {
 const borderColor = Color(0xFF805306);
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +32,8 @@ class MyApp extends StatelessWidget {
         body: WindowBorder(
           color: borderColor,
           width: 1,
-          child: Row(
-            children: const [LeftSide(), RightSide()],
+          child: const Row(
+            children: [LeftSide(), RightSide()],
           ),
         ),
       ),
@@ -42,7 +44,7 @@ class MyApp extends StatelessWidget {
 const sidebarColor = Color(0xFFF6A00C);
 
 class LeftSide extends StatelessWidget {
-  const LeftSide({Key? key}) : super(key: key);
+  const LeftSide({super.key});
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -62,7 +64,7 @@ const backgroundStartColor = Color(0xFFFFD500);
 const backgroundEndColor = Color(0xFFF6A00C);
 
 class RightSide extends StatelessWidget {
-  const RightSide({Key? key}) : super(key: key);
+  const RightSide({super.key});
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -100,10 +102,10 @@ final closeButtonColors = WindowButtonColors(
     iconMouseOver: Colors.white);
 
 class WindowButtons extends StatefulWidget {
-  const WindowButtons({Key? key}) : super(key: key);
+  const WindowButtons({super.key});
 
   @override
-  _WindowButtonsState createState() => _WindowButtonsState();
+  State<WindowButtons> createState() => _WindowButtonsState();
 }
 
 class _WindowButtonsState extends State<WindowButtons> {

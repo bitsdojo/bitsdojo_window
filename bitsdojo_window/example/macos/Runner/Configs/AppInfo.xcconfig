@@ -8,7 +8,7 @@
 PRODUCT_NAME = bitsdojo_window_example
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.bitsdojo_window_example
+PRODUCT_BUNDLE_IDENTIFIER = com.example.bitsdojo-window-example
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2021 com.example. All rights reserved.

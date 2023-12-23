@@ -46,7 +46,7 @@ The `pubspec.yaml` file should look like this:
   dependencies:
     flutter:
       sdk: flutter
-+ bitsdojo_window: ^0.1.5
++ bitsdojo_window: ^0.1.6
 
   dev_dependencies:
 

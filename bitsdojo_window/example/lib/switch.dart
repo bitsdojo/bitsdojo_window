@@ -94,10 +94,10 @@ class AppColors extends InheritedWidget {
   final AppSkin colors;
   //final Widget child;
   const AppColors({
-    Key? key,
+    super.key,
     required this.colors,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   static AppColors? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<AppColors>();
@@ -121,7 +121,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
@@ -130,10 +130,10 @@ class MyApp extends StatelessWidget {
 }
 
 class AppBody extends StatefulWidget {
-  const AppBody({Key? key}) : super(key: key);
+  const AppBody({super.key});
 
   @override
-  _AppBodyState createState() => _AppBodyState();
+  State<AppBody> createState() => _AppBodyState();
 }
 
 class _AppBodyState extends State<AppBody> {
@@ -165,7 +165,7 @@ class _AppBodyState extends State<AppBody> {
 }
 
 class LeftSide extends StatelessWidget {
-  const LeftSide({Key? key}) : super(key: key);
+  const LeftSide({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +182,7 @@ class LeftSide extends StatelessWidget {
 
 class RightSide extends StatelessWidget {
   final VoidCallback? onButtonPressed;
-  const RightSide({Key? key, this.onButtonPressed}) : super(key: key);
+  const RightSide({super.key, this.onButtonPressed});
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context)!.colors;
@@ -210,7 +210,7 @@ class RightSide extends StatelessWidget {
 }
 
 class RightSideTopArea extends StatelessWidget {
-  const RightSideTopArea({Key? key}) : super(key: key);
+  const RightSideTopArea({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -221,7 +221,7 @@ class RightSideTopArea extends StatelessWidget {
 }
 
 class WindowButtons extends StatelessWidget {
-  const WindowButtons({Key? key}) : super(key: key);
+  const WindowButtons({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -256,29 +256,27 @@ class RoundedFlatButton extends StatelessWidget {
   final String? text;
 
   const RoundedFlatButton(
-      {Key? key,
+      {super.key,
       this.onPressed,
       this.color,
       this.mouseOverColor,
       this.textColor,
-      this.text})
-      : super(key: key);
+      this.text});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      child: Text(text ?? 'Button'),
       style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.0),
-              side: const BorderSide(color: Colors.white)),
-          primary: color ?? Colors.grey[900],
+              side: const BorderSide(color: Colors.white)), backgroundColor: color ?? Colors.grey[900],
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
           textStyle: TextStyle(
               color: textColor ?? Colors.white,
               fontSize: 12.0,
               fontWeight: FontWeight.w600)),
       onPressed: onPressed,
+      child: Text(text ?? 'Button'),
     );
   }
 }

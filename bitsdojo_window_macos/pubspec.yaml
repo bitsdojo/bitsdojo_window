@@ -1,6 +1,6 @@
 name: bitsdojo_window_macos
 description: macOS implementation of the bitsdojo_window plugin.
-version: 0.1.3
+version: 0.1.4
 homepage: https://www.bitsdojo.com
 repository: https://github.com/bitsdojo/bitsdojo_window
 
