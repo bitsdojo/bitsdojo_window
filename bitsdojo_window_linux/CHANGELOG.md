@@ -1,3 +1,5 @@
+## 0.1.4
+    - Various fixes to work with latest Flutter version
 ## 0.1.3
     - Updated ffi to 2.0.0
 ## 0.1.2

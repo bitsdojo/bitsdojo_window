@@ -1,94 +1,105 @@
 #import "bitsdojo_window.h"
+#import "bitsdojo_window_controller.h"
 
 NSWindow* _appWindow = NULL;
 bool _windowCanBeShown = false;
 bool _insideDoWhenWindowReady = false;
+BitsdojoWindowController *controller = NULL;
 
-void setInsideDoWhenWindowReady(bool value){
+void setInsideDoWhenWindowReady(bool value) {
     _insideDoWhenWindowReady = value;
 }
 
-void setAppWindow(NSWindow* value){
-    _appWindow = value;
+bool appWindowIsSet() {
+    return _appWindow != NULL;
 }
 
-NSWindow* getAppWindow(){
-    if (NULL == _appWindow) {
+void setAppWindow(NSWindow* value) {
+    _appWindow = value;
+    controller = [[BitsdojoWindowController alloc] initWithWindow:value];
+}
+
+NSWindow* getAppWindow() {
+    if (_appWindow == NULL) {
         _appWindow = [NSApp windows][0];
     }
     return _appWindow;
 }
 
-bool windowCanBeShown(){
+bool windowCanBeShown() {
     return _windowCanBeShown;
 }
 
-void setWindowCanBeShown(bool value){
+void setWindowCanBeShown(bool value) {
     _windowCanBeShown = value;
+}
+void runOnMainThread(dispatch_block_t block) {
+    if ([NSThread isMainThread]) {
+        block();
+    } else {
+        dispatch_async(dispatch_get_main_queue(), block);
+    }
 }
 
 void showWindow(NSWindow* window) {
-    dispatch_async(dispatch_get_main_queue(), ^{
-       // [window setIsVisible:TRUE]
+    setWindowCanBeShown(true);
+    runOnMainThread(^{
+        if (![[NSApplication sharedApplication] isActive]) {
+            [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+        }
         [window makeKeyAndOrderFront:nil];
     });
 }
 
 void hideWindow(NSWindow* window) {
-
-    dispatch_async(dispatch_get_main_queue(), ^{
+    runOnMainThread(^{
         [window setIsVisible:FALSE];
     });
 }
 
 void moveWindow(NSWindow* window) {
-    dispatch_async(dispatch_get_main_queue(), ^{
+    runOnMainThread(^{
         [window performWindowDragWithEvent:[window currentEvent]];
-    }); 
+    });
 }
 
-void setSize(NSWindow* window, int width, int height){
+void setSize(NSWindow* window, int width, int height) {
     NSRect frame = [window frame];
     frame.size.width = width;
     frame.size.height = height;
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
+    runOnMainThread(^{
         [window setFrame:frame display:true];
     });
 }
 
-void setMinSize(NSWindow* window, int width, int height){
+void setMinSize(NSWindow* window, int width, int height) {
     NSSize minSize;
     minSize.width = width;
     minSize.height = height;
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
+    runOnMainThread(^{
         [window setMinSize:minSize];
     });
 }
 
-void setMaxSize(NSWindow* window, int width, int height){
+void setMaxSize(NSWindow* window, int width, int height) {
     NSSize maxSize;
     maxSize.width = width;
     maxSize.height = height;
-    dispatch_async(dispatch_get_main_queue(), ^{
+    runOnMainThread(^{
         [window setMaxSize:maxSize];
     });
 }
 
-BDWStatus getScreenInfoForWindow(NSWindow* window, BDWScreenInfo *screenInfo){
-    auto screen = [window screen];
-    auto workingScreenRect = [screen visibleFrame];
-    auto fullScreenRect = [screen frame];
+BDWStatus getScreenInfoForWindow(NSWindow* window, BDWScreenInfo *screenInfo) {
+    auto workingScreenRect = controller.workingScreenRect;
+    auto fullScreenRect = controller.fullScreenRect;
     auto menuBarHeight = fullScreenRect.size.height - workingScreenRect.size.height - workingScreenRect.origin.y;
-
     BDWRect* workingRect = screenInfo->workingRect;
     BDWRect* fullRect = screenInfo->fullRect;
     workingRect->top = menuBarHeight;
     workingRect->left = workingScreenRect.origin.x;
     workingRect->bottom = workingRect->top + workingScreenRect.size.height;
     workingRect->right = workingRect->left + workingScreenRect.size.width;
-    
     fullRect->left = fullScreenRect.origin.x;
     fullRect->right = fullRect->left + fullScreenRect.size.width;
     fullRect->top = fullScreenRect.origin.y;
@@ -96,48 +107,36 @@ BDWStatus getScreenInfoForWindow(NSWindow* window, BDWScreenInfo *screenInfo){
     return BDW_SUCCESS;
 }
 
-BDWStatus setPositionForWindow(NSWindow* window, BDWOffset* offset){
-    auto block = ^{
+BDWStatus setPositionForWindow(NSWindow* window, BDWOffset* offset) {
+    runOnMainThread(^{
         NSPoint position;
         auto screen = [window screen];
         auto fullScreenRect = [screen visibleFrame];
         position.x = offset->x;
         position.y = fullScreenRect.origin.y + fullScreenRect.size.height - offset->y;
         [window setFrameTopLeftPoint:position];
-    };
-
-    if ([NSThread isMainThread]) {
-        block();
-    } else {
-        dispatch_async(dispatch_get_main_queue(), block);
-    }
-    return BDW_SUCCESS;
-}
-BDWStatus setRectForWindow(NSWindow* window, BDWRect* rect){
-   
-    auto block = ^ {
-        NSScreen* screen = [window screen];
-        NSRect fullScreenRect = [screen frame];
-        NSRect frame;
-        frame.size.width = rect->right - rect->left;
-        frame.size.height = rect->bottom - rect->top;
-        frame.origin.x = fullScreenRect.origin.x + rect->left;
-        frame.origin.y = fullScreenRect.origin.y + fullScreenRect.size.height - rect->bottom;
-        [window setFrame:frame display:TRUE];
-    };
-
-    if ([NSThread isMainThread]) {
-        block();
-    } else {
-        dispatch_async(dispatch_get_main_queue(), block);
-    }
+    });
     return BDW_SUCCESS;
 }
 
-BDWStatus getRectForWindow(NSWindow* window, BDWRect *rect){
-    NSScreen* screen = [window screen];
-    auto workingScreenRect = [screen visibleFrame];
-    NSRect frame = [window frame];
+BDWStatus setRectForWindow(NSWindow* window, BDWRect* rect) {
+    setWindowCanBeShown(true);
+    NSRect fullScreenRect = controller.fullScreenRect;
+    NSRect frame;
+    frame.size.width = rect->right - rect->left;
+    frame.size.height = rect->bottom - rect->top;
+    frame.origin.x = fullScreenRect.origin.x + rect->left;
+    frame.origin.y = fullScreenRect.origin.y + fullScreenRect.size.height - rect->bottom;
+    controller.windowFrame = frame;
+    runOnMainThread(^{
+        [window setFrame:frame display:YES];
+    });
+    return BDW_SUCCESS;
+}
+
+BDWStatus getRectForWindow(NSWindow* window, BDWRect *rect) {
+    auto workingScreenRect = controller.workingScreenRect;
+    NSRect frame = controller.windowFrame;
     rect->left = frame.origin.x;
     auto frameTop = frame.origin.y + frame.size.height;
     auto workingScreenTop = workingScreenRect.origin.y + workingScreenRect.size.height;
@@ -147,48 +146,46 @@ BDWStatus getRectForWindow(NSWindow* window, BDWRect *rect){
     return BDW_SUCCESS;
 }
 
-bool isWindowMaximized(NSWindow* window){
-    return [window isZoomed];
+bool isWindowMaximized(NSWindow* window) {
+    return controller.isZoomed;
 }
 
-bool isWindowVisible(NSWindow* window){
-    return [window isVisible];
+bool isWindowVisible(NSWindow* window) {
+    return controller.isVisible;
 }
 
-void maximizeOrRestoreWindow(NSWindow* window){
-    dispatch_async(dispatch_get_main_queue(), ^{
+void maximizeOrRestoreWindow(NSWindow* window) {
+    runOnMainThread(^{
         [window zoom:nil];
     });
 }
 
-void maximizeWindow(NSWindow* window){
-    dispatch_async(dispatch_get_main_queue(), ^{
+void maximizeWindow(NSWindow* window) {
+    runOnMainThread(^{
         auto screen = [window screen];
         [window setFrame:[screen visibleFrame] display:true animate:true];
     });
 }
 
-void minimizeWindow(NSWindow* window){
-    dispatch_async(dispatch_get_main_queue(), ^{
-    [window miniaturize:nil];
+void minimizeWindow(NSWindow* window) {
+    runOnMainThread(^{
+        [window miniaturize:nil];
     });
 }
 
-void closeWindow(NSWindow* window){
-    dispatch_async(dispatch_get_main_queue(), ^{
+void closeWindow(NSWindow* window) {
+    runOnMainThread(^{
         [window close];
     });
 }
 
-void setWindowTitle(NSWindow* window, const char* title){
+void setWindowTitle(NSWindow* window, const char* title) {
     NSString *_title = [NSString stringWithUTF8String:title];
-    dispatch_async(dispatch_get_main_queue(), ^{
+    runOnMainThread(^{
         [window setTitle:_title];
     });
 }
 
-double getTitleBarHeight(NSWindow* window){
-    double windowFrameHeight = window.contentView.frame.size.height;
-    double contentLayoutHeight = window.contentLayoutRect.size.height;
-    return windowFrameHeight - contentLayoutHeight;
+double getTitleBarHeight(NSWindow* window) {
+    return controller.titleBarHeight;
 }

@@ -8,6 +8,9 @@
 typedef bool (*TWindowCanBeShown)();
 bool windowCanBeShown();
 
+typedef bool (*TAppWindowIsSet)();
+bool appWindowIsSet();
+
 typedef void (*TSetAppWindow)(NSWindow*);
 void setAppWindow(NSWindow* window);
 

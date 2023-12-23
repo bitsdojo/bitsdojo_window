@@ -25,6 +25,10 @@ open class BitsdojoWindow: NSWindow {
 
   }
   override public func order(_ place: NSWindow.OrderingMode, relativeTo otherWin: Int) {
+    if (!bdwPrivateAPI.appWindowIsSet())
+    {
+        bdwPrivateAPI.setAppWindow(self);
+    }
     let flags = self.bitsdojo_window_configure()
 
     let hideOnStartup:Bool = ((flags & BDW_HIDE_ON_STARTUP) != 0);
@@ -41,9 +45,8 @@ open class BitsdojoWindow: NSWindow {
     }
     super.order(place, relativeTo: otherWin)
     let windowCanBeShown: Bool = bdwPrivateAPI.windowCanBeShown();
-    bdwPrivateAPI.setAppWindow(self)
-    if (!(windowCanBeShown) && hideOnStartup) {
-      self.setIsVisible(false)
+    if (!(windowCanBeShown) && hideOnStartup && self.isVisible) {
+        self.setIsVisible(false)
     }
   }
 }

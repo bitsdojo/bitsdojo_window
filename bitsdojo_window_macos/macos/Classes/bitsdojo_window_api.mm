@@ -3,7 +3,8 @@
 
 BDWPrivateAPI privateAPI = {
     windowCanBeShown,
-    setAppWindow
+    setAppWindow,
+    appWindowIsSet,
 };
 
 BDWPublicAPI publicAPI = {

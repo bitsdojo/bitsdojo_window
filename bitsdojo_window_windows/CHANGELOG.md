@@ -1,3 +1,5 @@
+## 0.1.6
+    - Various fixes to work with latest Flutter version
 ## 0.1.5
     - Runs on Windows 7
 ## 0.1.4
