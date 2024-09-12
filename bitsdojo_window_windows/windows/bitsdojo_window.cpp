@@ -229,10 +229,21 @@ namespace bitsdojo_window {
         return monitorInfo.rcWork;
     }
 
+    RECT getWorkingScreenRectForRect(const RECT& rcWnd) {
+      MONITORINFO monitorInfo = {};
+      monitorInfo.cbSize = DWORD(sizeof(MONITORINFO));
+      auto monitor = MonitorFromRect(&rcWnd, MONITOR_DEFAULTTONEAREST);
+      GetMonitorInfoW(monitor, static_cast<LPMONITORINFO>(&monitorInfo));
+      return monitorInfo.rcWork;
+    }
+    RECT getWorkingScreenRectForWindowPos(WINDOWPOS* winPos) {
+      RECT rcWnd = { winPos->x, winPos->y, winPos->x + winPos->cx, winPos->y + winPos->cy };
+      return getWorkingScreenRectForRect(rcWnd);
+    }
     void adjustPositionOnRestoreByMove(HWND window, WINDOWPOS* winPos) {
         if (restore_by_moving == FALSE) return;
 
-        auto screenRect = getWorkingScreenRectForWindow(window);
+        auto screenRect = getWorkingScreenRectForWindowPos(winPos);
         
         if (winPos->y < screenRect.top) {
             winPos->y = screenRect.top;
@@ -240,7 +251,7 @@ namespace bitsdojo_window {
     }
 
     void adjustMaximizedSize(HWND window, WINDOWPOS* winPos) {
-        auto screenRect = getWorkingScreenRectForWindow(window);
+        auto screenRect = getWorkingScreenRectForWindowPos(winPos);
         if ((winPos->x < screenRect.left) &&
             (winPos->y < screenRect.top) &&
             (winPos->cx > (screenRect.right - screenRect.left))
@@ -253,7 +264,7 @@ namespace bitsdojo_window {
     }
 
     void adjustMaximizedRects(HWND window, NCCALCSIZE_PARAMS* params) {
-        auto screenRect = getWorkingScreenRectForWindow(window);
+        auto screenRect = getWorkingScreenRectForRect(params->rgrc[0]);
         for (int i = 0; i < 3; i++) {
             if ((params->rgrc[i].left < screenRect.left) &&
                 (params->rgrc[i].top < screenRect.top) &&
