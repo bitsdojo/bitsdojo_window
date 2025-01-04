@@ -113,7 +113,7 @@ class WindowButton extends StatelessWidget {
             (appWindow.titleBarHeight - borderSize) / 3 - (borderSize / 2);
         // Used when buttonContext.backgroundColor is null, allowing the AnimatedContainer to fade-out smoothly.
         var fadeOutColor =
-            getBackgroundColor(MouseState()..isMouseOver = true).withOpacity(0);
+            getBackgroundColor(MouseState()..isMouseOver = true).withAlpha(0);
         var padding = this.padding ?? EdgeInsets.all(defaultPadding);
         var animationMs =
             mouseState.isMouseOver ? (animate ? 100 : 0) : (animate ? 200 : 0);
