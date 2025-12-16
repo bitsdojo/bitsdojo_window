@@ -238,6 +238,14 @@ BitsdojoWindowImpl *getAppWindowInstance() {
     return _appWindow;
 }
 
+static GdkDevice* get_device(BitsdojoWindowImpl *self) {
+    auto window = self->handle;
+    auto screen = gtk_window_get_screen(window);
+    auto display = gdk_screen_get_display(screen);
+    auto seat = gdk_display_get_default_seat(display);
+    return gdk_seat_get_pointer(seat);
+}
+
 static gboolean onWindowEventAfter(GtkWidget *text_view, GdkEvent *event,
                                    BitsdojoWindowImpl *self) {
     if (event->type == GDK_ENTER_NOTIFY) {
@@ -252,6 +260,7 @@ static gboolean onWindowEventAfter(GtkWidget *text_view, GdkEvent *event,
             newEvent->button = self->currentPressedEvent.button;
             newEvent->type = GDK_BUTTON_RELEASE;
             newEvent->time = g_get_monotonic_time();
+            newEvent->device = get_device(self);
             gboolean result;
             g_signal_emit_by_name(self->event_box, "button-release-event",
                                   newEvent, &result);
@@ -263,9 +272,11 @@ static gboolean onWindowEventAfter(GtkWidget *text_view, GdkEvent *event,
         self->unblockButtonPress();
         gint x, y;
         self->getMousePositionInsideWindow(&x, &y);
-        emitMouseMoveEvent(self->event_box,x, y);
+
+
+        emitMouseMoveEvent(self->event_box, x, y, get_device(self));
     } else if (event->type == GDK_LEAVE_NOTIFY) {
-        emitMouseMoveEvent(self->event_box,-1, -1);
+        emitMouseMoveEvent(self->event_box,-1, -1, get_device(self));
     } else {
         // bitsdojo_window::printGdkEvent("event after", event->type);
     }

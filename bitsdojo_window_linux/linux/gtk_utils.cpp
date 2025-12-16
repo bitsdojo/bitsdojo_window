@@ -118,12 +118,14 @@ void getScaleFactorForWindow(GtkWindow *window, gint *scaleFactor) {
     *scaleFactor = gdk_monitor_get_scale_factor(monitor);
 }
 
-    void emitMouseMoveEvent(GtkWidget* widget, int x, int y) {
+    void emitMouseMoveEvent(GtkWidget* widget, int x, int y, GdkDevice *device) {
         auto event = (GdkEventButton *)gdk_event_new(GDK_MOTION_NOTIFY);
         event->type = GDK_MOTION_NOTIFY;
         event->x = x;
         event->y = y;
         event->time = g_get_monotonic_time();
+        event->device = device;
+
         gboolean result;
         g_signal_emit_by_name(widget, "motion-notify-event", event, &result);
         gdk_event_free((GdkEvent *)event);

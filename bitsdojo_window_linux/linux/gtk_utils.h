@@ -12,7 +12,7 @@ namespace bitsdojo_window {
     void getMousePositionOnScreen(GtkWindow* window, gint* x, gint* y);
     void getScreenRectForWindow(GtkWindow* window, GdkRectangle* rect);
     void getScaleFactorForWindow(GtkWindow* window, gint* scaleFactor);
-    void emitMouseMoveEvent(GtkWidget* widget, int x, int y);
+    void emitMouseMoveEvent(GtkWidget* widget, int x, int y, GdkDevice *device);
 }  // namespace bitsdojo_window
 
 #endif  // _BDW_GTK_UTILS_
