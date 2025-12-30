@@ -103,12 +103,22 @@ namespace bitsdojo_window {
         _In_ WPARAM wparam,
         _In_ LPARAM lparam)
     {
+        if (code < 0)
+        {
+            return CallNextHookEx(flutterWindowMonitor, code, wparam, lparam);
+        }
         if (code == HCBT_CREATEWND)
         {
             auto createParams = reinterpret_cast<CBT_CREATEWND*>(lparam);
+            // Check for null pointers to avoid crashes with certain IME (Input Method Editors)
+            // like xinshuru (手心输入法) that may create windows with null lpcs or lpszClass
+            if (!createParams || !createParams->lpcs || !createParams->lpcs->lpszClass)
+            {
+                return CallNextHookEx(flutterWindowMonitor, code, wparam, lparam);
+            }
             if (!createParams->lpcs->lpCreateParams)
             {
-                return 0;
+                return CallNextHookEx(flutterWindowMonitor, code, wparam, lparam);
             }
             if (wcscmp(createParams->lpcs->lpszClass, L"FLUTTER_RUNNER_WIN32_WINDOW") == 0)
             {
@@ -125,7 +135,7 @@ namespace bitsdojo_window {
         {
             UnhookWindowsHookEx(flutterWindowMonitor);
         }
-        return 0;
+        return CallNextHookEx(flutterWindowMonitor, code, wparam, lparam);
     }
 
     void monitorFlutterWindows()
