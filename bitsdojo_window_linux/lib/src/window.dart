@@ -1,11 +1,11 @@
 import 'dart:ffi' hide Size;
+
+import 'package:bitsdojo_window_platform_interface/bitsdojo_window_platform_interface.dart';
+import 'package:ffi/ffi.dart';
 import 'package:flutter/painting.dart';
 
-import 'package:ffi/ffi.dart';
-
-import './native_api.dart' as native;
 import './gtk.dart';
-import 'package:bitsdojo_window_platform_interface/bitsdojo_window_platform_interface.dart';
+import './native_api.dart' as native;
 
 var isInsideDoWhenWindowReady = false;
 
@@ -23,10 +23,9 @@ class CachedWindowInfo {
 
 Rect getScreenRectForWindow(int handle) {
   Pointer<Int32> gtkRect = malloc.allocate(sizeOf<Int32>() * 4);
-  native.getScreenRect(handle, gtkRect.elementAt(0), gtkRect.elementAt(1),
-      gtkRect.elementAt(2), gtkRect.elementAt(3));
-  Rect result = Rect.fromLTWH(gtkRect[0].toDouble(), gtkRect[1].toDouble(),
-      gtkRect[2].toDouble(), gtkRect[3].toDouble());
+  native.getScreenRect(handle, gtkRect + 0, gtkRect + 1, gtkRect + 2, gtkRect + 3);
+  Rect result =
+      Rect.fromLTWH(gtkRect[0].toDouble(), gtkRect[1].toDouble(), gtkRect[2].toDouble(), gtkRect[3].toDouble());
   malloc.free(gtkRect);
 
   return result;
@@ -70,10 +69,10 @@ class GtkWindow extends DesktopWindow {
     }
 
     Pointer<Int32> gtkRect = malloc.allocate(sizeOf<Int32>() * 4);
-    native.getPosition(handle!, gtkRect.elementAt(0), gtkRect.elementAt(1));
-    native.getSize(handle!, gtkRect.elementAt(2), gtkRect.elementAt(3));
-    Rect result = Rect.fromLTWH(gtkRect[0].toDouble(), gtkRect[1].toDouble(),
-        gtkRect[2].toDouble(), gtkRect[3].toDouble());
+    native.getPosition(handle!, gtkRect + 0, gtkRect + 1);
+    native.getSize(handle!, gtkRect + 2, gtkRect + 3);
+    Rect result =
+        Rect.fromLTWH(gtkRect[0].toDouble(), gtkRect[1].toDouble(), gtkRect[2].toDouble(), gtkRect[3].toDouble());
 
     malloc.free(gtkRect);
     return result;
@@ -83,8 +82,7 @@ class GtkWindow extends DesktopWindow {
   set rect(Rect newRect) {
     if (!isValidHandle(handle, "set rectangle")) return;
     _cached.rect = newRect;
-    native.setRect(handle!, newRect.left.toInt(), newRect.top.toInt(),
-        newRect.width.toInt(), newRect.height.toInt());
+    native.setRect(handle!, newRect.left.toInt(), newRect.top.toInt(), newRect.width.toInt(), newRect.height.toInt());
   }
 
   @override
@@ -96,8 +94,7 @@ class GtkWindow extends DesktopWindow {
     }
 
     Pointer<Int32> nativeResult = malloc.allocate(sizeOf<Int32>() * 2);
-    native.getSize(
-        handle!, nativeResult.elementAt(0), nativeResult.elementAt(1));
+    native.getSize(handle!, nativeResult + 0, nativeResult + 1);
     Size result = Size(nativeResult[0].toDouble(), nativeResult[1].toDouble());
     malloc.free(nativeResult);
     final gotSize = getLogicalSize(result);
@@ -126,7 +123,7 @@ class GtkWindow extends DesktopWindow {
   double get scaleFactor {
     if (!isValidHandle(handle, "get scaleFactor")) return 1;
     Pointer<Int32> scaleFactorPtr = malloc.allocate(sizeOf<Int32>());
-    native.getScaleFactor(handle!, scaleFactorPtr.elementAt(0));
+    native.getScaleFactor(handle!, scaleFactorPtr + 1);
     double result = scaleFactorPtr[0].toDouble();
     malloc.free(scaleFactorPtr);
     return result;
@@ -183,8 +180,7 @@ class GtkWindow extends DesktopWindow {
       //TODO - add handling for setting minSize to null
       return;
     }
-    native.setMinSize(
-        handle!, _minSize!.width.toInt(), _minSize!.height.toInt());
+    native.setMinSize(handle!, _minSize!.width.toInt(), _minSize!.height.toInt());
   }
 
   @override
@@ -196,8 +192,7 @@ class GtkWindow extends DesktopWindow {
       //TODO - add handling for setting maxSize to null
       return;
     }
-    native.setMaxSize(
-        handle!, _maxSize!.width.toInt(), _maxSize!.height.toInt());
+    native.setMaxSize(handle!, _maxSize!.width.toInt(), _maxSize!.height.toInt());
   }
 
   @override
@@ -232,8 +227,7 @@ class GtkWindow extends DesktopWindow {
     _cached.rect = Rect.fromLTWH(left, top, width, height);
 
     if (_alignment == null) {
-      native.setSize(
-          handle!, sizeToSet.width.toInt(), sizeToSet.height.toInt());
+      native.setSize(handle!, sizeToSet.width.toInt(), sizeToSet.height.toInt());
       //native.setWindowSize(handle!, sizeToSet);
     } else {
       final sizeOnScreen = getSizeOnScreen((sizeToSet));

@@ -1,21 +1,20 @@
 name: bitsdojo_window_windows
 description: Windows implementation of the bitsdojo_window plugin.
-version: 0.1.6
+version: 1.0.0
 homepage: https://www.bitsdojo.com
 repository: https://github.com/bitsdojo/bitsdojo_window
 
 environment:
-  sdk: ">=2.17.0 <4.0.0"
-  flutter: ">=1.20.0"
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.41.0"
 
 dependencies:
   flutter:
     sdk: flutter
   bitsdojo_window_platform_interface:
-    ^0.1.2
-    #path: ../bitsdojo_window_platform_interface
-  win32: ^5.1.1
-  ffi: ^2.0.0
+    path: ../bitsdojo_window_platform_interface
+  win32: ^6.0.1
+  ffi: ^2.2.0
 
 dev_dependencies:
   flutter_test:

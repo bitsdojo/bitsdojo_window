@@ -1,18 +1,18 @@
 import 'dart:ffi' hide Size;
-import 'package:flutter/painting.dart';
 
+import 'package:bitsdojo_window_platform_interface/bitsdojo_window_platform_interface.dart';
 import 'package:ffi/ffi.dart';
+import 'package:flutter/painting.dart';
 import 'package:win32/win32.dart';
 
-import './win32_plus.dart';
 import './native_api.dart' as native;
-import 'package:bitsdojo_window_platform_interface/bitsdojo_window_platform_interface.dart';
-import './window_util.dart';
+import './win32_plus.dart';
 import './window_interface.dart';
+import './window_util.dart';
 
 var isInsideDoWhenWindowReady = false;
 
-bool isValidHandle(int? handle, String operation) {
+bool isValidHandle(HWND? handle, String operation) {
   if (handle == null) {
     print("Could not $operation - handle is null");
     return false;
@@ -20,23 +20,20 @@ bool isValidHandle(int? handle, String operation) {
   return true;
 }
 
-Rect getScreenRectForWindow(int handle) {
-  int monitor = MonitorFromWindow(handle, MONITOR_DEFAULTTONEAREST);
+Rect getScreenRectForWindow(HWND handle) {
+  HMONITOR monitor = MonitorFromWindow(handle, MONITOR_DEFAULTTONEAREST);
   final monitorInfo = calloc<MONITORINFO>()..ref.cbSize = sizeOf<MONITORINFO>();
   final result = GetMonitorInfo(monitor, monitorInfo);
   if (result == TRUE) {
-    return Rect.fromLTRB(
-        monitorInfo.ref.rcWork.left.toDouble(),
-        monitorInfo.ref.rcWork.top.toDouble(),
-        monitorInfo.ref.rcWork.right.toDouble(),
-        monitorInfo.ref.rcWork.bottom.toDouble());
+    return Rect.fromLTRB(monitorInfo.ref.rcWork.left.toDouble(), monitorInfo.ref.rcWork.top.toDouble(),
+        monitorInfo.ref.rcWork.right.toDouble(), monitorInfo.ref.rcWork.bottom.toDouble());
   }
   return Rect.zero;
 }
 
 class WinWindow extends WinDesktopWindow {
   static final dpiAware = native.isDPIAware();
-  int? handle;
+  HWND? handle;
   Size? _minSize;
   Size? _maxSize;
   // We use this for reporting size inside doWhenWindowReady
@@ -63,8 +60,8 @@ class WinWindow extends WinDesktopWindow {
 
   set rect(Rect newRect) {
     if (!isValidHandle(handle, "set rectangle")) return;
-    setWindowPos(handle!, 0, newRect.left.toInt(), newRect.top.toInt(),
-        newRect.width.toInt(), newRect.height.toInt(), 0);
+    setWindowPos(
+        handle!, 0, newRect.left.toInt(), newRect.top.toInt(), newRect.width.toInt(), newRect.height.toInt(), 0);
   }
 
   Size get size {
@@ -84,16 +81,14 @@ class WinWindow extends WinDesktopWindow {
     return Size(winRect.width, winRect.height);
   }
 
-  double systemMetric(int metric, {int dpiToUse = 0}) {
+  int systemMetric(SYSTEM_METRICS_INDEX metric, {int dpiToUse = 0}) {
     final windowDpi = dpiToUse != 0 ? dpiToUse : this.dpi;
-    double result = dpiAware
-        ? GetSystemMetricsForDpi(metric, windowDpi).toDouble()
-        : GetSystemMetrics(metric).toDouble();
+    int result = dpiAware ? GetSystemMetricsForDpi(metric, windowDpi).value : GetSystemMetrics(metric);
     return result;
   }
 
   double get borderSize {
-    return this.systemMetric(SM_CXBORDER);
+    return this.systemMetric(SM_CXBORDER).toDouble();
   }
 
   int get dpi {
@@ -109,11 +104,11 @@ class WinWindow extends WinDesktopWindow {
   double get titleBarHeight {
     double scaleFactor = this.scaleFactor;
     int dpiToUse = this.dpi;
-    double cyCaption = systemMetric(SM_CYCAPTION, dpiToUse: dpiToUse);
+    double cyCaption = systemMetric(SM_CYCAPTION, dpiToUse: dpiToUse).toDouble();
     cyCaption = (cyCaption / scaleFactor);
-    double cySizeFrame = systemMetric(SM_CYSIZEFRAME, dpiToUse: dpiToUse);
+    double cySizeFrame = systemMetric(SM_CYSIZEFRAME, dpiToUse: dpiToUse).toDouble();
     cySizeFrame = (cySizeFrame / scaleFactor);
-    double cxPaddedBorder = systemMetric(SM_CXPADDEDBORDER, dpiToUse: dpiToUse);
+    double cxPaddedBorder = systemMetric(SM_CXPADDEDBORDER, dpiToUse: dpiToUse).toDouble();
     cxPaddedBorder = (cxPaddedBorder / scaleFactor).ceilToDouble();
     double result = cySizeFrame + cyCaption + cxPaddedBorder;
     return result;
@@ -122,7 +117,7 @@ class WinWindow extends WinDesktopWindow {
   Size get titleBarButtonSize {
     double height = this.titleBarHeight - this.borderSize;
     double scaleFactor = this.scaleFactor;
-    double cyCaption = systemMetric(SM_CYCAPTION);
+    double cyCaption = systemMetric(SM_CYCAPTION).toDouble();
     cyCaption /= scaleFactor;
     double width = cyCaption * 2;
     return Size(width, height);
@@ -151,8 +146,7 @@ class WinWindow extends WinDesktopWindow {
     if (_alignment != null) {
       if (!isValidHandle(handle, "set alignment")) return;
       final screenRect = getScreenRectForWindow(handle!);
-      final rectOnScreen =
-          getRectOnScreen(sizeOnScreen, _alignment!, screenRect);
+      final rectOnScreen = getRectOnScreen(sizeOnScreen, _alignment!, screenRect);
       this.rect = rectOnScreen;
     }
   }
@@ -201,8 +195,7 @@ class WinWindow extends WinDesktopWindow {
     Size sizeToSet = Size(width, height);
     _sizeSetFromDart = sizeToSet;
     if (_alignment == null) {
-      SetWindowPos(handle!, 0, 0, 0, sizeToSet.width.toInt(),
-          sizeToSet.height.toInt(), SWP_NOMOVE);
+      SetWindowPos(handle!, null, 0, 0, sizeToSet.width.toInt(), sizeToSet.height.toInt(), SWP_NOMOVE);
     } else {
       final sizeOnScreen = getSizeOnScreen((sizeToSet));
       final screenRect = getScreenRectForWindow(handle!);
@@ -231,21 +224,18 @@ class WinWindow extends WinDesktopWindow {
 
   set position(Offset newPosition) {
     if (!isValidHandle(handle, "set position")) return;
-    SetWindowPos(handle!, 0, newPosition.dx.toInt(), newPosition.dy.toInt(), 0,
-        0, SWP_NOSIZE);
+    SetWindowPos(handle!, null, newPosition.dx.toInt(), newPosition.dy.toInt(), 0, 0, SWP_NOSIZE);
   }
 
   void show() {
     if (!isValidHandle(handle, "show")) return;
-    setWindowPos(
-        handle!, 0, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW);
+    setWindowPos(handle!, 0, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW);
     forceChildRefresh(handle!);
   }
 
   void hide() {
     if (!isValidHandle(handle, "hide")) return;
-    SetWindowPos(
-        handle!, 0, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_HIDEWINDOW);
+    SetWindowPos(handle!, null, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_HIDEWINDOW);
   }
 
   @Deprecated("use show()/hide() instead")
@@ -259,23 +249,23 @@ class WinWindow extends WinDesktopWindow {
 
   void close() {
     if (!isValidHandle(handle, "close")) return;
-    PostMessage(handle!, WM_SYSCOMMAND, SC_CLOSE, 0);
+    PostMessage(handle!, WM_SYSCOMMAND, WPARAM(SC_CLOSE), LPARAM(0));
   }
 
   void maximize() {
     if (!isValidHandle(handle, "maximize")) return;
-    PostMessage(handle!, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+    PostMessage(handle!, WM_SYSCOMMAND, WPARAM(SC_MAXIMIZE), LPARAM(0));
   }
 
   void minimize() {
     if (!isValidHandle(handle, "minimize")) return;
 
-    PostMessage(handle!, WM_SYSCOMMAND, SC_MINIMIZE, 0);
+    PostMessage(handle!, WM_SYSCOMMAND, WPARAM(SC_MINIMIZE), LPARAM(0));
   }
 
   void restore() {
     if (!isValidHandle(handle, "restore")) return;
-    PostMessage(handle!, WM_SYSCOMMAND, SC_RESTORE, 0);
+    PostMessage(handle!, WM_SYSCOMMAND, WPARAM(SC_RESTORE), LPARAM(0));
   }
 
   void maximizeOrRestore() {
