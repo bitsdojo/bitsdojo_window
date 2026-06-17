@@ -77,21 +77,21 @@ jobs:
 
       - name: Archive artifacts (Linux)
         if: matrix.runner == 'ubuntu'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: bitsdojo_window_example_${{ matrix.runner }}
           path: bitsdojo_window/example/build/linux/x64/release/bundle/
 
       - name: Archive artifacts (Windows)
         if: matrix.runner == 'windows'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: bitsdojo_window_example_${{ matrix.runner }}
           path: bitsdojo_window/example/build/windows/runner/Release/bitsdojo_window_example.exe
 
       - name: Archive artifacts (macOS)
         if: matrix.runner == 'macos'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: bitsdojo_window_example_${{ matrix.runner }}
           path: bitsdojo_window/example/build/macos/Build/Products/Release/bitsdojo_window_example.app

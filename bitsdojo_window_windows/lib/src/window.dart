@@ -21,10 +21,11 @@ bool isValidHandle(int? handle, String operation) {
 }
 
 Rect getScreenRectForWindow(int handle) {
-  int monitor = MonitorFromWindow(handle, MONITOR_DEFAULTTONEAREST);
+  final monitor =
+      MonitorFromWindow(hWndFromInt(handle), MONITOR_DEFAULTTONEAREST);
   final monitorInfo = calloc<MONITORINFO>()..ref.cbSize = sizeOf<MONITORINFO>();
   final result = GetMonitorInfo(monitor, monitorInfo);
-  if (result == TRUE) {
+  if (result) {
     return Rect.fromLTRB(
         monitorInfo.ref.rcWork.left.toDouble(),
         monitorInfo.ref.rcWork.top.toDouble(),
@@ -55,7 +56,7 @@ class WinWindow extends WinDesktopWindow {
   Rect get rect {
     if (!isValidHandle(handle, "get rectangle")) return Rect.zero;
     final winRect = calloc<RECT>();
-    GetWindowRect(handle!, winRect);
+    GetWindowRect(hWndFromInt(handle!), winRect);
     Rect result = winRect.ref.toRect;
     calloc.free(winRect);
     return result;
@@ -87,8 +88,10 @@ class WinWindow extends WinDesktopWindow {
   double systemMetric(int metric, {int dpiToUse = 0}) {
     final windowDpi = dpiToUse != 0 ? dpiToUse : this.dpi;
     double result = dpiAware
-        ? GetSystemMetricsForDpi(metric, windowDpi).toDouble()
-        : GetSystemMetrics(metric).toDouble();
+        ? GetSystemMetricsForDpi(SYSTEM_METRICS_INDEX(metric), windowDpi)
+            .value
+            .toDouble()
+        : GetSystemMetrics(SYSTEM_METRICS_INDEX(metric)).toDouble();
     return result;
   }
 
@@ -98,7 +101,7 @@ class WinWindow extends WinDesktopWindow {
 
   int get dpi {
     if (!dpiAware || !isValidHandle(handle, "get dpi")) return 96;
-    return GetDpiForWindow(handle!);
+    return GetDpiForWindow(hWndFromInt(handle!));
   }
 
   double get scaleFactor {
@@ -201,8 +204,8 @@ class WinWindow extends WinDesktopWindow {
     Size sizeToSet = Size(width, height);
     _sizeSetFromDart = sizeToSet;
     if (_alignment == null) {
-      SetWindowPos(handle!, 0, 0, 0, sizeToSet.width.toInt(),
-          sizeToSet.height.toInt(), SWP_NOMOVE);
+      SetWindowPos(hWndFromInt(handle!), null, 0, 0,
+          sizeToSet.width.toInt(), sizeToSet.height.toInt(), SWP_NOMOVE);
     } else {
       final sizeOnScreen = getSizeOnScreen((sizeToSet));
       final screenRect = getScreenRectForWindow(handle!);
@@ -212,7 +215,7 @@ class WinWindow extends WinDesktopWindow {
 
   bool get isMaximized {
     if (!isValidHandle(handle, "get isMaximized")) return false;
-    return (IsZoomed(handle!) == 1);
+    return IsZoomed(hWndFromInt(handle!));
   }
 
   @Deprecated("use isVisible instead")
@@ -221,7 +224,7 @@ class WinWindow extends WinDesktopWindow {
   }
 
   bool get isVisible {
-    return (IsWindowVisible(handle!) == 1);
+    return IsWindowVisible(hWndFromInt(handle!));
   }
 
   Offset get position {
@@ -231,8 +234,8 @@ class WinWindow extends WinDesktopWindow {
 
   set position(Offset newPosition) {
     if (!isValidHandle(handle, "set position")) return;
-    SetWindowPos(handle!, 0, newPosition.dx.toInt(), newPosition.dy.toInt(), 0,
-        0, SWP_NOSIZE);
+    SetWindowPos(hWndFromInt(handle!), null, newPosition.dx.toInt(),
+        newPosition.dy.toInt(), 0, 0, SWP_NOSIZE);
   }
 
   void show() {
@@ -244,8 +247,8 @@ class WinWindow extends WinDesktopWindow {
 
   void hide() {
     if (!isValidHandle(handle, "hide")) return;
-    SetWindowPos(
-        handle!, 0, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_HIDEWINDOW);
+    SetWindowPos(hWndFromInt(handle!), null, 0, 0, 0, 0,
+        SWP_NOSIZE | SWP_NOMOVE | SWP_HIDEWINDOW);
   }
 
   @Deprecated("use show()/hide() instead")
@@ -259,28 +262,32 @@ class WinWindow extends WinDesktopWindow {
 
   void close() {
     if (!isValidHandle(handle, "close")) return;
-    PostMessage(handle!, WM_SYSCOMMAND, SC_CLOSE, 0);
+    PostMessage(
+        hWndFromInt(handle!), WM_SYSCOMMAND, WPARAM(SC_CLOSE), LPARAM(0));
   }
 
   void maximize() {
     if (!isValidHandle(handle, "maximize")) return;
-    PostMessage(handle!, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+    PostMessage(
+        hWndFromInt(handle!), WM_SYSCOMMAND, WPARAM(SC_MAXIMIZE), LPARAM(0));
   }
 
   void minimize() {
     if (!isValidHandle(handle, "minimize")) return;
 
-    PostMessage(handle!, WM_SYSCOMMAND, SC_MINIMIZE, 0);
+    PostMessage(
+        hWndFromInt(handle!), WM_SYSCOMMAND, WPARAM(SC_MINIMIZE), LPARAM(0));
   }
 
   void restore() {
     if (!isValidHandle(handle, "restore")) return;
-    PostMessage(handle!, WM_SYSCOMMAND, SC_RESTORE, 0);
+    PostMessage(
+        hWndFromInt(handle!), WM_SYSCOMMAND, WPARAM(SC_RESTORE), LPARAM(0));
   }
 
   void maximizeOrRestore() {
     if (!isValidHandle(handle, "maximizeOrRestore")) return;
-    if (IsZoomed(handle!) == 1) {
+    if (IsZoomed(hWndFromInt(handle!))) {
       this.restore();
     } else {
       this.maximize();

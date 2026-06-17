@@ -14,7 +14,7 @@ dependencies:
   bitsdojo_window_platform_interface:
     ^0.1.2
     #path: ../bitsdojo_window_platform_interface
-  win32: ^5.1.1
+  win32: ^6.3.0
   ffi: ^2.0.0
 
 dev_dependencies:

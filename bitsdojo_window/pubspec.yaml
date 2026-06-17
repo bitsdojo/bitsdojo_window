@@ -25,8 +25,8 @@ dependencies:
     ^0.1.2
     #path: ../bitsdojo_window_platform_interface
   bitsdojo_window_windows:
-    ^0.1.6
-    #path: ../bitsdojo_window_windows
+  #   ^0.1.6
+    path: ../bitsdojo_window_windows
   bitsdojo_window_macos:
     ^0.1.4
     #path: ../bitsdojo_window_macos
