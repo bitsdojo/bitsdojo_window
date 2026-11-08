@@ -4,3 +4,7 @@
 
 # Xcode-related
 **/xcuserdata/
+
+# Swift Package Manager
+.build/
+.swiftpm/

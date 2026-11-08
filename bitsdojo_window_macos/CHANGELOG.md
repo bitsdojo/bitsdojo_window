@@ -1,3 +1,5 @@
+## 0.1.5
+    - Added Swift Package Manager support for macOS ([flutter SPM migration guide](https://docs.flutter.dev/packages-and-plugins/swift-package-manager/for-plugin-authors))
 ## 0.1.4
     - Various fixes to work with latest Flutter version
 ## 0.1.3

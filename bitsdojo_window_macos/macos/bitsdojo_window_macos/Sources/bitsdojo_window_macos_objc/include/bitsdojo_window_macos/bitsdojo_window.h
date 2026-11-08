@@ -1,6 +1,7 @@
 #ifndef bitsdojo_window_h
 #define bitsdojo_window_h
 
+#import <Cocoa/Cocoa.h>
 #include "./bitsdojo_window_common.h"
 
 // Native private API

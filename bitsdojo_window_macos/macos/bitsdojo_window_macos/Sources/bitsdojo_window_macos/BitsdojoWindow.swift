@@ -1,4 +1,7 @@
 import Cocoa
+#if canImport(bitsdojo_window_macos_objc)
+import bitsdojo_window_macos_objc
+#endif
 
 let bdwAPI = bitsdojo_window_api().pointee;
 let bdwPrivateAPI = bdwAPI.privateAPI.pointee;
